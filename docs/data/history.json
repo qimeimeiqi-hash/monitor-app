@@ -5,5 +5,12 @@
     "changed_at": "2026-08-25T07:15:01.390550+00:00",
     "old_value": "Example Domain",
     "new_value": "Example Domain"
+  },
+  {
+    "target": "Example Domain Heading",
+    "url": "https://example.com",
+    "changed_at": "2026-08-25T07:16:59.328155+00:00",
+    "old_value": "Example Domain",
+    "new_value": "Example Domain"
   }
 ]
