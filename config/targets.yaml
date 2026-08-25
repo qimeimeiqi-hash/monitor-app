@@ -1,0 +1,12 @@
+# 监测目标列表。每个目标: name（用于生成 target-id 和邮件标题）、url、
+# selector（CSS 选择器，指定要比较的页面区域）、enabled（是否参与本次运行）。
+targets:
+  - name: "Example Domain Heading"
+    url: "https://example.com"
+    selector: "h1"
+    enabled: true
+
+  - name: "Httpbin Sample Heading"
+    url: "https://httpbin.org/html"
+    selector: "h1"
+    enabled: true

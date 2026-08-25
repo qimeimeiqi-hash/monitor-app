@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网页数据变动监测面板</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>网页数据变动监测面板</h1>
+    <p class="subtitle">数据由 GitHub Actions 定时抓取并自动更新</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>最新状态</h2>
+      <div id="latest-status-list" class="status-grid"></div>
+    </section>
+
+    <section>
+      <h2>变动趋势</h2>
+      <div id="trend-charts" class="chart-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Python + Resend + Chart.js + GitHub Actions · 零成本部署于 GitHub Pages</p>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
