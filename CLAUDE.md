@@ -12,7 +12,6 @@
 
 - **Python 3.11+**：网页抓取（`requests` + `beautifulsoup4`）、内容比较、生成历史数据
 - **Resend API**：免费邮件通知（HTTP API 调用，无需 SMTP 服务器）
-- ~~Amadeus for Developers API~~：原计划用于免费机票查价，**已于 2026-07-17 停服，目前机票监测功能暂停**，详见”机票价格监测”一节
 - **Chart.js**：前端可视化面板，纯静态页面，托管在 GitHub Pages
 - **GitHub Actions**：`schedule` 触发，定时运行抓取任务并自动 commit 结果
 
@@ -42,17 +41,9 @@
 │       ├── snapshots/           # 每个监测目标的最新快照（用于下次比较）
 │       ├── latest.json          # 所有目标的最新状态（供“最新状态”列表使用，每次运行整体覆盖）
 │       └── history.json         # 所有目标的历史变动记录（只追加），供 Chart.js 读取
-├── config/
-│   └── flights.yaml            # 机票价格监测目标（航线、单程/往返、价格阈值等）
-├── src/
-│   ├── flight_api.py           # 调 Amadeus 官方免费 API：OAuth2 认证 + 查某航线未来某时间段内的最低价
-│   └── flights_main.py         # 编排入口：查价 -> 判断是否低于阈值 -> 通知 -> 落盘
-├── flights.py                  # 根目录编排入口，内部调用 src/flights_main.py::run
-├── docs/data/flights/          # 机票监测的数据，独立于网页监测的 docs/data/（见下方“机票价格监测”一节）
 ├── .github/
 │   └── workflows/
-│       ├── monitor.yml        # 定时任务：每 24 小时运行一次网页抓取脚本并 commit 结果
-│       └── flights.yml        # 机票查价脚本，目前暂停（无 schedule，只保留 workflow_dispatch，见“机票价格监测”一节）
+│       └── monitor.yml        # 定时任务：每 24 小时运行一次网页抓取脚本并 commit 结果
 ├── requirements.txt
 └── .env.example                # 环境变量示例，不含真实密钥
 ```
@@ -140,25 +131,6 @@ targets:
 - 面板源码放在 `docs/` 目录，通过仓库 Settings 中开启 GitHub Pages（Source: Deploy from a branch，目录选 `docs/`），实现零成本静态托管。
 - `docs/index.html` + `docs/assets/app.js` 用原生 JS + Chart.js（通过 CDN 引入）读取同目录下的 `docs/data/latest.json`（最新状态列表）和 `docs/data/history.json`（按目标分组绘制变动趋势图），均为页面同源相对路径 fetch，本地用 `python -m http.server` 在 `docs/` 下起服务即可验证。
 - 面板为纯前端展示，不包含任何密钥、不发起需要认证的请求；`history.json`/`latest.json` 为空或某目标暂无历史记录时需展示空态提示，不能渲染出错的图表。
-
-### 9. 机票价格监测（当前暂停 —— 数据源已失效，见下方说明）
-
-> **状态：已暂停。** 本节原方案基于 Amadeus for Developers 的免费自助 API，但 Amadeus 已在 **2026 年 7 月 17 日彻底关停了自助开发者门户**（2026 年 2 月发公告、暂停新注册，7 月连老用户的 API Key 一并失效），目前没有替代数据源接入。`.github/workflows/flights.yml` 已把 `schedule` 触发去掉，只保留 `workflow_dispatch`，不会自动运行、也不会因为调用一个已关闭的接口而报错刷屏。`src/flight_api.py`、`src/flights_main.py`、`config/flights.yaml`、对应测试都保留在仓库里，等选定新的数据源后只需要重写 `flight_api.py` 里请求 Amadeus 的那部分，`flights_main.py` 的编排逻辑（阈值判断、去重提醒、落盘、复用 notifier）不需要动。
->
-> 备选数据源评估：Kiwi.com 的 Tequila API 也已从 2024 年 5 月起改为邀请制 B2B，不对个人开放；RapidAPI 市场上有若干第三方机票查价接口个人可自助注册、有免费额度，但覆盖率/可靠性未经验证；Duffel 的免费测试模式只返回模拟数据（Duffel Airways 沙箱），不是真实价格。真正可用的方案需要用户先试用验证。
-
-这是一个和网页监测并列、但独立运作的子系统，因为数据来源、检测逻辑都不一样（**以下描述的是原方案的设计思路，`flight_api.py` 里 Amadeus 的具体调用现在实际上跑不通，仅供未来接入新数据源时参考架构**）：
-
-- **数据来源**：不用 CSS 选择器爬取 OTA 网站（携程/去哪儿/Skyscanner/Google Flights 这类网站价格是 JS 动态加载的，`requests` 拿不到真实数据，而且普遍有反爬机制，硬爬既拿不到数据也可能违反其服务条款）。原方案用的是 **Amadeus for Developers** 的免费自助 API（`https://developers.amadeus.com`，现已关停），走官方 OAuth2（`client_credentials`）认证，返回结构化 JSON，不涉及爬虫/反爬问题——这个"用官方 API 而不是爬虫"的原则在换数据源时应该继续保持。
-- **查价接口**：用 Amadeus 的 *Flight Cheapest Date Search*（`GET /v1/shopping/flight-dates`），而不是逐天调用 *Flight Offers Search*——前者一次调用传一个日期区间（`departureDate=2026-09-01,2026-09-21`），就能拿到区间内最便宜的那天，把每条航线每次运行的调用次数从"逐天轮询的 N 次"降到 1 次，避免把 Amadeus 测试环境的免费月度调用额度（超限会返回 429）消耗光。
-- **直飞**：请求参数固定 `nonStop=true`，对应用户要求的"直飞机票"。
-- **单程/往返**：`oneWay=true/false`；往返时额外传 `duration=<min_stay_days>,<max_stay_days>`（在外天数区间，避免搜出不现实的 1 天往返）。
-- **城市/机场代码**：用 IATA 城市代码而非单一机场代码，覆盖同城多机场——`SHA`=上海（虹桥+浦东）、`TYO`=东京（成田+羽田）、`DLC`=大连。
-- **配置**：`config/flights.yaml`，每条航线一个 route，字段包括 `origin`/`destination`/`trip_type`/`look_ahead_days`/`min_stay_days`/`max_stay_days`/`nonstop_only`/`currency`/`price_threshold`/`enabled`。`price_threshold` 是占位值，需要用户根据自己心理价位改掉，否则要么几乎不触发、要么（如果用户填得偏高）一上线就触发。
-- **提醒规则（避免刷屏）**：不是"每次查都发"，而是"价格低于阈值，且比上次触发提醒时的价格更低"才发邮件——即只在创新低时提醒，价格反复在阈值以下小幅波动不会重复轰炸。这个"上次提醒价"记录在 `docs/data/flights/snapshots/<route-id>.json` 的 `last_alert_price` 字段里。
-- **数据存储**：**独立于** 网页监测用的 `docs/data/`，单独放在 `docs/data/flights/`（同样是 `snapshots/`、`latest.json`、`history.json` 三件套，字段结构和网页监测完全一致，因此前端 `app.js` 的渲染函数可以原样复用，只是多 fetch 一份数据、多渲一组容器）。之所以要分开目录：`monitor.py`（网页监测）和 `flights.py`（机票监测）是两个独立的 GitHub Actions workflow，各自独立调度、独立 `write_latest_status`（整体覆盖写入）；如果共用同一个 `latest.json`，后跑的那个 workflow 会把先跑的那个的数据整体覆盖掉。
-- **邮件通知**：复用现有的 `src/notifier.py`（`send_change_notification`），机票的"变动记录"只是把 `old_value`/`new_value` 换成格式化后的价格字符串，字段结构（`target`/`url`/`old_value`/`new_value`）和网页监测的 history 记录一致，所以不需要新写一套邮件发送逻辑。
-- **定时任务**：独立的 `.github/workflows/flights.yml`，原计划 `cron: '0 1 * * *'`（比网页监测的 workflow 错开 1 小时，避免两个 workflow 同时 push 造成冲突）——**这个 cron 触发目前已注释掉**（见本节开头的状态说明），只保留 `workflow_dispatch` 供换好数据源后手动验证用。
 
 ## 开发与提交约定
 
