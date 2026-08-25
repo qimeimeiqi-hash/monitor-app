@@ -94,7 +94,7 @@
 
 ### Phase 3 验收标准
 - [x] 定时任务在无人工干预下按 24 小时稳定运行（`cron: '0 0 * * *'` 已生效，另支持 `workflow_dispatch` 手动触发，三次手动触发全部 success）
-- [ ] 变动发生时能收到 Resend 邮件提醒 —— **代码链路已验证无报错，但邮件是否真的落进收件箱需要你亲自确认一下**
+- [x] 变动发生时能收到 Resend 邮件提醒（你已确认在 `qimeimeiqi@gmail.com` 收到了提醒邮件）
 - [x] GitHub Pages 面板始终反映仓库中最新的 `docs/data/history.json`
 - [x] 全流程零成本：全程只用了 public 仓库的 Actions 分钟数、GitHub Pages 免费托管、Resend 免费额度，没有引入任何付费服务
 
