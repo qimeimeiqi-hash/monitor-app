@@ -100,7 +100,9 @@
 
 ---
 
-## Phase 4：机票价格监测（上海/大连 ⇄ 东京，直飞）
+## Phase 4：机票价格监测（上海/大连 ⇄ 东京，直飞）—— **已暂停**
+
+> Amadeus for Developers 的自助 API 门户已于 2026-07-17 官方彻底关停（新注册早在 2 月就暂停了，7 月连老用户的 Key 都失效），4.1/4.2 做的编排逻辑、去重提醒、面板展示都是通用的，能保留；但 4.1 里 `src/flight_api.py` 实际请求 Amadeus 的那部分现在**跑不通**。4.3 的定时触发已手动关掉（`flights.yml` 去掉了 `schedule`，只留 `workflow_dispatch`），不会自动运行、也不会因为调用失效接口而报错刷屏。下面的勾选状态是"这段代码/功能当初做完并验证过"，不代表"现在能用"。
 
 ### 4.1 数据源与核心逻辑
 - [x] `src/flight_api.py`：Amadeus OAuth2 认证 + Flight Cheapest Date Search 查价（一次调用拿区间内最低价，而不是逐天轮询）
@@ -115,14 +117,18 @@
 - [x] 用 mock 数据本地起服务 + Playwright 截图验证过：两个区块正常渲染、空态正常、控制台无报错；验证完已清理掉伪造数据，不会把假数据当真数据提交
 
 ### 4.3 GitHub Actions
-- [x] `.github/workflows/flights.yml`：独立于 `monitor.yml` 的定时任务，`cron: '0 1 * * *'`（错开网页监测的整点，避免两个 workflow 同时 push 冲突），YAML 语法已校验
-- [ ] **需要你操作**：在仓库 Settings → Secrets 里新增 `AMADEUS_API_KEY`、`AMADEUS_API_SECRET`（去 https://developers.amadeus.com/my-apps 免费注册获取）
-- [ ] **需要你操作**：改 `config/flights.yaml` 里四条 route 的 `price_threshold` 为你自己觉得划算的价格
-- [ ] 配置好密钥后，手动触发一次 `workflow_dispatch` 做端到端验证（我可以帮你触发和看日志，但拿不到 API Key 这一步必须你自己去 Amadeus 官网注册）
+- [x] `.github/workflows/flights.yml`：独立于 `monitor.yml` 的定时任务（YAML 语法已校验）
+- [x] **已处理**：`schedule` 触发已移除（原为 `cron: '0 1 * * *'`），只保留 `workflow_dispatch`，暂停自动运行
+- [ ] ~~在仓库 Settings → Secrets 里新增 AMADEUS_API_KEY / AMADEUS_API_SECRET~~ —— 作废，Amadeus 自助注册已下线，配了也没用
+- [ ] 改 `config/flights.yaml` 里四条 route 的 `price_threshold`（等选定新数据源、确认能查到真实价格后再做）
+- [ ] 选一个新的机票查价数据源，重写 `src/flight_api.py`，恢复 `flights.yml` 的 `schedule`
 
-### 已知风险 / 需要你留意
-- Amadeus **测试环境**（`test.api.amadeus.com`）的数据是历史/抽样数据，不保证覆盖所有航线——上海/大连⇄东京这两条航线在测试环境里**可能查不到数据**（`flights_main.py` 对这种情况已经做了优雅处理，会在面板上显示"暂无可用运价数据"而不是报错崩溃，但如果一直查不到，说明测试环境没有这条航线的数据，需要等账号转正式环境或者换个数据源）。
-- 测试环境有免费月度调用额度，超限返回 429；当前设计每条航线每次运行只调用 1 次 Flight Cheapest Date Search，4 条航线 × 每天 1 次 = 每月约 120 次，正常使用不会超额度。
+### 待定：下一步数据源怎么选
+- **Amadeus for Developers**：❌ 已死，自助门户 2026-07-17 彻底关停，新老用户都不能用
+- **Kiwi.com Tequila API**：❌ 已死，2024-05 起改为邀请制 B2B，不对个人开放
+- **RapidAPI 市场上的第三方机票查价接口**：个人可自助注册（邮箱/GitHub 登录即可），有免费额度，但具体哪个接口对上海/大连⇄东京这几条航线覆盖好、数据可靠，需要实际注册试用后才知道，我没法替你提前打包票
+- **Duffel**：个人可注册，但免费的 test 模式只返回模拟数据（Duffel Airways 沙箱），不是真实价格；live 模式能不能免费个人用还需要进一步确认
+- **回到最初的思路**：直接指定一个机票搜索结果页 URL，看价格是否在页面初始 HTML 里（不是 JS 动态加载的），可行的话就复用现有的网页监测架构（CSS 选择器），不需要额外接 API
 
 ---
 

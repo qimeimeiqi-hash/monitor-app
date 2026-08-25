@@ -1,10 +1,12 @@
 name: Flight Prices
 
 on:
-  schedule:
-    # Every 24 hours at 01:00 UTC (offset from monitor.yml's 00:00 run to avoid both
-    # workflows racing to commit/push docs/data at the same time).
-    - cron: "0 1 * * *"
+  # PAUSED: no `schedule` trigger for now. src/flight_api.py talks to
+  # test.api.amadeus.com, and Amadeus fully decommissioned its self-service API
+  # portal (including existing keys) on 2026-07-17 -- there is currently no
+  # working data source behind this workflow. Left as workflow_dispatch-only so
+  # it can be re-enabled once a replacement flight-price API is picked (see the
+  # "机票价格监测" section in CLAUDE.md and Phase 4 in TODO.md).
   workflow_dispatch: {}
 
 permissions:
