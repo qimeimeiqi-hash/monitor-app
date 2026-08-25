@@ -140,6 +140,7 @@ targets:
 - 面板源码放在 `docs/` 目录，通过仓库 Settings 中开启 GitHub Pages（Source: Deploy from a branch，目录选 `docs/`），实现零成本静态托管。
 - `docs/index.html` + `docs/assets/app.js` 用原生 JS + Chart.js（通过 CDN 引入）读取同目录下的 `docs/data/latest.json`（最新状态列表）和 `docs/data/history.json`（按目标分组绘制变动趋势图），均为页面同源相对路径 fetch，本地用 `python -m http.server` 在 `docs/` 下起服务即可验证。
 - 面板为纯前端展示，不包含任何密钥、不发起需要认证的请求；`history.json`/`latest.json` 为空或某目标暂无历史记录时需展示空态提示，不能渲染出错的图表。
+- **面板 UI 语言固定为日文**（`docs/index.html` 的 `lang="ja"`，标题/各区块标题/空态提示/时间格式化 locale 均为日文），是用户明确要求的，以后改动 `docs/index.html`、`docs/assets/app.js` 或后端生成"最新状态"卡片文案（如 `src/stocks_main.py` 里的 `format_price_label`）时都要保持日文，不要改回中文。仓库内部文档（CLAUDE.md/TODO.md）和代码注释不受此限制，继续用中文。
 
 ### 9. 股票价格监测（日本五大商社）
 

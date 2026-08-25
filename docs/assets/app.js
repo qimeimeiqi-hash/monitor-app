@@ -17,7 +17,7 @@ function formatTimestamp(isoString) {
   if (!isoString) {
     return "-";
   }
-  return new Date(isoString).toLocaleString("zh-CN", { hour12: false });
+  return new Date(isoString).toLocaleString("ja-JP", { hour12: false });
 }
 
 function escapeHtml(value) {
@@ -31,7 +31,7 @@ function renderLatestStatusList(latestStatusEntries, containerId) {
   container.innerHTML = "";
 
   if (latestStatusEntries.length === 0) {
-    container.innerHTML = '<p class="empty-state">暂无监测数据，等待第一次 Actions 运行。</p>';
+    container.innerHTML = '<p class="empty-state">監視データはまだありません。最初の Actions 実行をお待ちください。</p>';
     return;
   }
 
@@ -41,7 +41,7 @@ function renderLatestStatusList(latestStatusEntries, containerId) {
     card.innerHTML = `
       <h3>${escapeHtml(entry.target)}</h3>
       <p class="status-url"><a href="${escapeHtml(entry.url)}" target="_blank" rel="noopener">${escapeHtml(entry.url)}</a></p>
-      <p class="status-meta">最后检查：${formatTimestamp(entry.checked_at)}</p>
+      <p class="status-meta">最終確認：${formatTimestamp(entry.checked_at)}</p>
       <p class="status-content">${escapeHtml(entry.content)}</p>
     `;
     container.appendChild(card);
@@ -73,7 +73,7 @@ function renderChartCard(container, targetName, entries, seriesLabel) {
   if (entries.length === 0) {
     const emptyState = document.createElement("p");
     emptyState.className = "empty-state";
-    emptyState.textContent = "暂无变动记录，趋势图会在检测到第一次变动后出现。";
+    emptyState.textContent = "変動記録はまだありません。最初の変動を検知すると推移グラフが表示されます。";
     chartCard.appendChild(emptyState);
     container.appendChild(chartCard);
     return;
@@ -125,7 +125,7 @@ function renderTrendCharts(historyEntries, latestStatusEntries, containerId, ser
   ]);
 
   if (knownTargetNames.size === 0) {
-    container.innerHTML = '<p class="empty-state">暂无监测数据，等待第一次 Actions 运行。</p>';
+    container.innerHTML = '<p class="empty-state">監視データはまだありません。最初の Actions 実行をお待ちください。</p>';
     return;
   }
 
@@ -145,8 +145,8 @@ async function loadAndRenderSection(dataBasePath, statusContainerId, chartContai
 }
 
 async function init() {
-  await loadAndRenderSection(DATA_BASE_PATH, "latest-status-list", "trend-charts", "累计变动次数");
-  await loadAndRenderSection("data/stocks", "stock-status-list", "stock-trend-charts", "累计创新低次数");
+  await loadAndRenderSection(DATA_BASE_PATH, "latest-status-list", "trend-charts", "累計変動回数");
+  await loadAndRenderSection("data/stocks", "stock-status-list", "stock-trend-charts", "累計最安値更新回数");
 }
 
 init();

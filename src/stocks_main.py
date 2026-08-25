@@ -31,7 +31,7 @@ def build_quote_link(symbol: str) -> str:
 
 
 def format_price_label(currency: str, close: float, date: str) -> str:
-    return f"{currency} {close:.1f}（{date} 收盘）"
+    return f"{currency} {close:.1f}（{date} 終値）"
 
 
 def process_stock(stock: dict, data_dir: Path) -> tuple:
@@ -66,8 +66,8 @@ def process_stock(stock: dict, data_dir: Path) -> tuple:
         "target": stock["name"],
         "url": status_record["url"],
         "changed_at": checked_at,
-        "old_value": f"此前2个月内最低 {price_data['currency']} {new_low['previous_low']:.1f}",
-        "new_value": format_price_label(price_data["currency"], new_low["close"], new_low["date"]) + "，创2个月新低",
+        "old_value": f"直近2か月の最安値 {price_data['currency']} {new_low['previous_low']:.1f}",
+        "new_value": format_price_label(price_data["currency"], new_low["close"], new_low["date"]) + "（2か月ぶりの最安値を更新）",
     }
     append_history(change_record, data_dir)
     return status_record, change_record

@@ -33,7 +33,7 @@ def test_process_stock_alerts_when_latest_close_is_a_new_two_month_low(tmp_path)
     assert change_record is not None
     assert "1900.0" in change_record["old_value"]
     assert "1750.0" in change_record["new_value"]
-    assert "创2个月新低" in change_record["new_value"]
+    assert "2か月ぶりの最安値を更新" in change_record["new_value"]
 
     snapshot = read_snapshot("8001-t", tmp_path)
     assert snapshot["last_alert_date"] == "2026-08-25"

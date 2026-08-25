@@ -1,44 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>网页数据变动监测面板</title>
+  <title>Webデータ変動監視ダッシュボード</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230f172a'/%3E%3Cpath d='M5 17V10M12 17V6M19 17V13' stroke='%2360a5fa' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <header>
-    <h1>网页数据变动监测面板</h1>
-    <p class="subtitle">数据由 GitHub Actions 定时抓取并自动更新</p>
+    <h1>Webデータ変動監視ダッシュボード</h1>
+    <p class="subtitle">GitHub Actionsが定期的にデータを取得し、自動で更新しています</p>
   </header>
 
   <main>
     <section>
-      <h2>最新状态</h2>
+      <h2>最新ステータス</h2>
       <div id="latest-status-list" class="status-grid"></div>
     </section>
 
     <section>
-      <h2>变动趋势</h2>
+      <h2>変動の推移</h2>
       <div id="trend-charts" class="chart-grid"></div>
     </section>
 
     <section>
-      <h2>股票价格 · 最新状态</h2>
-      <p class="subtitle">日本五大商社，当天收盘价创 2 个月内新低时会发邮件提醒</p>
+      <h2>株価 · 最新ステータス</h2>
+      <p class="subtitle">日本の五大商社。終値が過去2か月の最安値を更新するとメールで通知します</p>
       <div id="stock-status-list" class="status-grid"></div>
     </section>
 
     <section>
-      <h2>股票价格 · 创新低趋势</h2>
+      <h2>株価 · 最安値更新の推移</h2>
       <div id="stock-trend-charts" class="chart-grid"></div>
     </section>
   </main>
 
   <footer>
-    <p>Python + Resend + Chart.js + GitHub Actions · 零成本部署于 GitHub Pages</p>
+    <p>Python + Resend + Chart.js + GitHub Actions · GitHub Pagesで完全無料運用</p>
   </footer>
 
   <script src="assets/app.js"></script>
