@@ -100,7 +100,34 @@
 
 ---
 
+## Phase 4：机票价格监测（上海/大连 ⇄ 东京，直飞）
+
+### 4.1 数据源与核心逻辑
+- [x] `src/flight_api.py`：Amadeus OAuth2 认证 + Flight Cheapest Date Search 查价（一次调用拿区间内最低价，而不是逐天轮询）
+- [x] `src/flights_main.py`：编排入口，含"低于阈值且比上次提醒价更低才发邮件"的去重逻辑，`config/flights.yaml` 里没配阈值/API 挂了/查不到报价都不会让整个 run 崩溃
+- [x] `flights.py`：根目录编排入口
+- [x] `config/flights.yaml`：上海→东京单程、上海⇄东京往返、大连→东京单程、大连⇄东京往返，四条 route（**price_threshold 是占位值，正式使用前必须改成你自己的心理价位**）
+- [x] `tests/test_flight_api.py`、`tests/test_flights_main.py`：全部 mock 网络请求，覆盖首次低于阈值提醒、同价不重复提醒、更低价再提醒、查不到报价、缺 Amadeus 密钥、单条路线出错不影响其他路线（新增 15 项，`pytest` 全量从 22 项增加到 37 项，全部通过）
+
+### 4.2 数据存储与面板
+- [x] 数据独立存放在 `docs/data/flights/`（不与网页监测的 `docs/data/` 混用，避免两个 workflow 互相覆盖 latest.json）
+- [x] `docs/index.html` + `docs/assets/app.js` 新增"机票价格·最新状态"和"机票价格·降价提醒趋势"两个区块，复用已有的渲染函数（`renderLatestStatusList`/`renderTrendCharts` 改造为接受 containerId 参数）
+- [x] 用 mock 数据本地起服务 + Playwright 截图验证过：两个区块正常渲染、空态正常、控制台无报错；验证完已清理掉伪造数据，不会把假数据当真数据提交
+
+### 4.3 GitHub Actions
+- [x] `.github/workflows/flights.yml`：独立于 `monitor.yml` 的定时任务，`cron: '0 1 * * *'`（错开网页监测的整点，避免两个 workflow 同时 push 冲突），YAML 语法已校验
+- [ ] **需要你操作**：在仓库 Settings → Secrets 里新增 `AMADEUS_API_KEY`、`AMADEUS_API_SECRET`（去 https://developers.amadeus.com/my-apps 免费注册获取）
+- [ ] **需要你操作**：改 `config/flights.yaml` 里四条 route 的 `price_threshold` 为你自己觉得划算的价格
+- [ ] 配置好密钥后，手动触发一次 `workflow_dispatch` 做端到端验证（我可以帮你触发和看日志，但拿不到 API Key 这一步必须你自己去 Amadeus 官网注册）
+
+### 已知风险 / 需要你留意
+- Amadeus **测试环境**（`test.api.amadeus.com`）的数据是历史/抽样数据，不保证覆盖所有航线——上海/大连⇄东京这两条航线在测试环境里**可能查不到数据**（`flights_main.py` 对这种情况已经做了优雅处理，会在面板上显示"暂无可用运价数据"而不是报错崩溃，但如果一直查不到，说明测试环境没有这条航线的数据，需要等账号转正式环境或者换个数据源）。
+- 测试环境有免费月度调用额度，超限返回 429；当前设计每条航线每次运行只调用 1 次 Flight Cheapest Date Search，4 条航线 × 每天 1 次 = 每月约 120 次，正常使用不会超额度。
+
+---
+
 ## 阶段间依赖说明
 
 - Phase 2 依赖 Phase 1 产出的 `data/history.json` 数据结构，开发 Phase 2 时可先用手工构造的示例 JSON 进行联调，无需等待 Phase 3 完成。
 - Phase 3 依赖 Phase 1、Phase 2 已在本地验证通过，避免把未测试的代码直接放到定时任务中反复出错、浪费 Actions 运行次数。
+- Phase 4 与 Phase 1-3 相互独立（不同的数据目录、不同的 workflow），可以随时接入，不影响已经在跑的网页监测。

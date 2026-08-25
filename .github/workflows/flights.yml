@@ -1,0 +1,47 @@
+name: Flight Prices
+
+on:
+  schedule:
+    # Every 24 hours at 01:00 UTC (offset from monitor.yml's 00:00 run to avoid both
+    # workflows racing to commit/push docs/data at the same time).
+    - cron: "0 1 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  check-flight-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check flight prices
+        env:
+          AMADEUS_API_KEY: ${{ secrets.AMADEUS_API_KEY }}
+          AMADEUS_API_SECRET: ${{ secrets.AMADEUS_API_SECRET }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_TO_EMAIL: ${{ secrets.NOTIFY_TO_EMAIL }}
+          NOTIFY_FROM_EMAIL: ${{ secrets.NOTIFY_FROM_EMAIL }}
+        run: python flights.py
+
+      - name: Commit and push updated flight data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/flights
+          if git diff --cached --quiet; then
+            echo "No flight data changes to commit"
+          else
+            git commit -m "chore: update flight price data $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push
+          fi

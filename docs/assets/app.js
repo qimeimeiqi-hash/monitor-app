@@ -26,8 +26,8 @@ function escapeHtml(value) {
   return div.innerHTML;
 }
 
-function renderLatestStatusList(latestStatusEntries) {
-  const container = document.getElementById("latest-status-list");
+function renderLatestStatusList(latestStatusEntries, containerId) {
+  const container = document.getElementById(containerId);
   container.innerHTML = "";
 
   if (latestStatusEntries.length === 0) {
@@ -62,7 +62,7 @@ function groupHistoryByTarget(historyEntries) {
   return grouped;
 }
 
-function renderChartCard(container, targetName, entries) {
+function renderChartCard(container, targetName, entries, seriesLabel) {
   const chartCard = document.createElement("div");
   chartCard.className = "chart-card";
 
@@ -89,7 +89,7 @@ function renderChartCard(container, targetName, entries) {
       labels: entries.map((entry) => formatTimestamp(entry.changed_at)),
       datasets: [
         {
-          label: "累计变动次数",
+          label: seriesLabel,
           data: entries.map((_, index) => index + 1),
           borderColor: "#60a5fa",
           backgroundColor: "rgba(96, 165, 250, 0.2)",
@@ -114,8 +114,8 @@ function renderChartCard(container, targetName, entries) {
   });
 }
 
-function renderTrendCharts(historyEntries, latestStatusEntries) {
-  const container = document.getElementById("trend-charts");
+function renderTrendCharts(historyEntries, latestStatusEntries, containerId, seriesLabel) {
+  const container = document.getElementById(containerId);
   container.innerHTML = "";
 
   const groupedByTarget = groupHistoryByTarget(historyEntries);
@@ -130,18 +130,23 @@ function renderTrendCharts(historyEntries, latestStatusEntries) {
   }
 
   for (const targetName of knownTargetNames) {
-    renderChartCard(container, targetName, groupedByTarget.get(targetName) ?? []);
+    renderChartCard(container, targetName, groupedByTarget.get(targetName) ?? [], seriesLabel);
   }
 }
 
-async function init() {
+async function loadAndRenderSection(dataBasePath, statusContainerId, chartContainerId, seriesLabel) {
   const [latestStatusEntries, historyEntries] = await Promise.all([
-    fetchJson(`${DATA_BASE_PATH}/latest.json`, []),
-    fetchJson(`${DATA_BASE_PATH}/history.json`, []),
+    fetchJson(`${dataBasePath}/latest.json`, []),
+    fetchJson(`${dataBasePath}/history.json`, []),
   ]);
 
-  renderLatestStatusList(latestStatusEntries);
-  renderTrendCharts(historyEntries, latestStatusEntries);
+  renderLatestStatusList(latestStatusEntries, statusContainerId);
+  renderTrendCharts(historyEntries, latestStatusEntries, chartContainerId, seriesLabel);
+}
+
+async function init() {
+  await loadAndRenderSection(DATA_BASE_PATH, "latest-status-list", "trend-charts", "累计变动次数");
+  await loadAndRenderSection("data/flights", "flight-status-list", "flight-trend-charts", "累计降价提醒次数");
 }
 
 init();
