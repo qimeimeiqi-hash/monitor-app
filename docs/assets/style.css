@@ -1,82 +1,310 @@
 :root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --border: #334155;
-  --text: #e2e8f0;
-  --text-muted: #94a3b8;
-  --accent: #60a5fa;
+  --color-bg: #0a0f1c;
+  --color-surface: #131a2b;
+  --color-surface-alt: #0e1424;
+  --color-border: #223049;
+  --color-text: #f1f5f9;
+  --color-text-secondary: #98a2b8;
+  --color-text-muted: #64708a;
+  --color-accent: #34d399;
+  --color-accent-soft: rgba(52, 211, 153, 0.12);
+  --color-accent-ring: rgba(52, 211, 153, 0.35);
+  --color-muted-accent: #7c8aa8;
+  --nav-height: 60px;
+  --radius: 12px;
+  --radius-sm: 8px;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  padding: 0 1.5rem 3rem;
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
 }
 
-header {
-  max-width: 960px;
+a {
+  color: inherit;
+}
+
+section[id] {
+  scroll-margin-top: calc(var(--nav-height) + 12px);
+}
+
+/* ============================================================
+   ナビゲーション
+   ============================================================ */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  background: rgba(10, 15, 28, 0.82);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nav-inner {
+  width: 100%;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 2.5rem 0 1rem;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-header h1 {
-  margin: 0 0 0.4rem;
-  font-size: 1.6rem;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  color: var(--color-text);
+  white-space: nowrap;
 }
 
-.subtitle {
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--color-accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.35rem;
+  list-style: none;
   margin: 0;
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  padding: 0;
 }
 
-main {
-  max-width: 960px;
+.nav-link {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-link.active {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+/* ============================================================
+   ヒーロー & サマリー
+   ============================================================ */
+.hero {
+  max-width: 1000px;
   margin: 0 auto;
+  padding: 2.75rem 1.5rem 1.5rem;
 }
 
-section {
-  margin-bottom: 2.5rem;
+.hero h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
-section h2 {
-  font-size: 1.15rem;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+.hero .subtitle {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
 }
 
+.summary-strip {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.5rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.85rem;
+}
+
+.stat-tile {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.1rem;
+}
+
+.stat-tile-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.stat-tile-value {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-tile-value.is-accent {
+  color: var(--color-accent);
+}
+
+/* ============================================================
+   セクション共通
+   ============================================================ */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section {
+  padding: 1.5rem 0 3rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  position: relative;
+  padding-left: 0.9rem;
+}
+
+.section-header h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--section-accent, var(--color-accent));
+}
+
+.section-header .subtitle {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+}
+
+.subsection-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin: 0 0 0.85rem;
+}
+
+.subsection + .subsection {
+  margin-top: 2rem;
+}
+
+/* 株価セクション（主役） */
+.section-stocks {
+  --section-accent: var(--color-accent);
+}
+
+/* Webページ監視セクション（サンプル・控えめ表示） */
+.section-webpages {
+  --section-accent: var(--color-muted-accent);
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  opacity: 0.92;
+}
+
+.section-webpages .section-header h2 {
+  font-size: 1.05rem;
+}
+
+.section-webpages .status-card,
+.section-webpages .chart-card {
+  padding: 0.75rem 0.95rem;
+}
+
+.section-webpages .status-card h3,
+.section-webpages .chart-card h3 {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.section-webpages .status-content {
+  font-size: 0.82rem;
+}
+
+/* ============================================================
+   カード
+   ============================================================ */
 .status-grid,
 .chart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.9rem;
 }
 
 .status-card,
 .chart-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
   padding: 1rem 1.2rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.status-card:hover,
+.chart-card:hover {
+  border-color: var(--section-accent, var(--color-border));
+  transform: translateY(-1px);
 }
 
 .status-card h3,
 .chart-card h3 {
   margin: 0 0 0.5rem;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .status-url a {
-  color: var(--accent);
+  color: var(--section-accent, var(--color-accent));
   text-decoration: none;
   word-break: break-all;
+  font-size: 0.85rem;
 }
 
 .status-url a:hover {
@@ -84,28 +312,53 @@ section h2 {
 }
 
 .status-meta {
-  color: var(--text-muted);
-  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
   margin: 0.4rem 0;
 }
 
 .status-content {
   font-size: 0.9rem;
-  line-height: 1.4;
+  line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
 .empty-state {
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
 }
 
+/* ============================================================
+   フッター
+   ============================================================ */
 footer {
-  max-width: 960px;
+  max-width: 1000px;
   margin: 0 auto;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   font-size: 0.8rem;
   text-align: center;
-  padding-top: 1rem;
+  padding: 2rem 1.5rem 3rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ============================================================
+   レスポンシブ
+   ============================================================ */
+@media (max-width: 600px) {
+  .nav-inner {
+    padding: 0 1rem;
+  }
+
+  .nav-link {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .hero,
+  .summary-strip,
+  main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

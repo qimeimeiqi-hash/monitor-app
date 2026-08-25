@@ -141,6 +141,7 @@ targets:
 - `docs/index.html` + `docs/assets/app.js` 用原生 JS + Chart.js（通过 CDN 引入）读取同目录下的 `docs/data/latest.json`（最新状态列表）和 `docs/data/history.json`（按目标分组绘制变动趋势图），均为页面同源相对路径 fetch，本地用 `python -m http.server` 在 `docs/` 下起服务即可验证。
 - 面板为纯前端展示，不包含任何密钥、不发起需要认证的请求；`history.json`/`latest.json` 为空或某目标暂无历史记录时需展示空态提示，不能渲染出错的图表。
 - **面板 UI 语言固定为日文**（`docs/index.html` 的 `lang="ja"`，标题/各区块标题/空态提示/时间格式化 locale 均为日文），是用户明确要求的，以后改动 `docs/index.html`、`docs/assets/app.js` 或后端生成"最新状态"卡片文案（如 `src/stocks_main.py` 里的 `format_price_label`）时都要保持日文，不要改回中文。仓库内部文档（CLAUDE.md/TODO.md）和代码注释不受此限制，继续用中文。
+- **页面布局是用户明确要求的信息架构，改动前先确认**：顶部固定导航栏（品牌标 + 锚点链接，点击平滑滚动到对应 `<section id="...">`，`docs/assets/app.js` 里的 `initNavHighlight()` 用 `IntersectionObserver` 做滚动高亮，模式抄自 `C:\Users\qimei\todo` 那个履历站的 `js/main.js`）→ 精简 hero → 数据概览条（`#summary-strip` 三个统计数字，由 `renderSummary()` 在两个数据源都加载完后计算填入）→ **股票监测在前**（`#stocks`，主色是翠绿 `--color-accent: #34d399`，因为这是用户真正在用的功能）→ **网页监测在后且视觉弱化**（`#webpages`，标题更小、配色改用灰蓝的 `--color-muted-accent`、卡片内边距更紧凑，因为目前只有 `config/targets.yaml` 里两条验证用的示例目标，不是正式监测内容）。新增监测类型/区块时应延续"重要内容在前、示例/次要内容弱化在后"这个原则，而不是简单地在末尾追加一个和其他区块视觉权重相同的新 section。
 
 ### 9. 股票价格监测（日本五大商社）
 

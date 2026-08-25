@@ -62,7 +62,7 @@ function groupHistoryByTarget(historyEntries) {
   return grouped;
 }
 
-function renderChartCard(container, targetName, entries, seriesLabel) {
+function renderChartCard(container, targetName, entries, seriesLabel, seriesColor) {
   const chartCard = document.createElement("div");
   chartCard.className = "chart-card";
 
@@ -91,8 +91,8 @@ function renderChartCard(container, targetName, entries, seriesLabel) {
         {
           label: seriesLabel,
           data: entries.map((_, index) => index + 1),
-          borderColor: "#60a5fa",
-          backgroundColor: "rgba(96, 165, 250, 0.2)",
+          borderColor: seriesColor,
+          backgroundColor: `${seriesColor}33`,
           stepped: true,
           fill: true,
           tension: 0,
@@ -114,7 +114,7 @@ function renderChartCard(container, targetName, entries, seriesLabel) {
   });
 }
 
-function renderTrendCharts(historyEntries, latestStatusEntries, containerId, seriesLabel) {
+function renderTrendCharts(historyEntries, latestStatusEntries, containerId, seriesLabel, seriesColor) {
   const container = document.getElementById(containerId);
   container.innerHTML = "";
 
@@ -130,23 +130,74 @@ function renderTrendCharts(historyEntries, latestStatusEntries, containerId, ser
   }
 
   for (const targetName of knownTargetNames) {
-    renderChartCard(container, targetName, groupedByTarget.get(targetName) ?? [], seriesLabel);
+    renderChartCard(container, targetName, groupedByTarget.get(targetName) ?? [], seriesLabel, seriesColor);
   }
 }
 
-async function loadAndRenderSection(dataBasePath, statusContainerId, chartContainerId, seriesLabel) {
+async function loadAndRenderSection(dataBasePath, statusContainerId, chartContainerId, seriesLabel, seriesColor) {
   const [latestStatusEntries, historyEntries] = await Promise.all([
     fetchJson(`${dataBasePath}/latest.json`, []),
     fetchJson(`${dataBasePath}/history.json`, []),
   ]);
 
   renderLatestStatusList(latestStatusEntries, statusContainerId);
-  renderTrendCharts(historyEntries, latestStatusEntries, chartContainerId, seriesLabel);
+  renderTrendCharts(historyEntries, latestStatusEntries, chartContainerId, seriesLabel, seriesColor);
+
+  return latestStatusEntries;
+}
+
+function renderSummary(stockEntries, webpageEntries) {
+  const allEntries = [...stockEntries, ...webpageEntries];
+  const lastCheckedTimes = allEntries.map((entry) => entry.checked_at).filter(Boolean);
+  const mostRecent = lastCheckedTimes.length > 0 ? lastCheckedTimes.sort().at(-1) : null;
+
+  document.getElementById("stat-stock-count").textContent = String(stockEntries.length);
+  document.getElementById("stat-webpage-count").textContent = String(webpageEntries.length);
+  document.getElementById("stat-last-checked").textContent = formatTimestamp(mostRecent);
+}
+
+function initNavHighlight() {
+  const sections = document.querySelectorAll("main section[id]");
+  const navLinkMap = new Map();
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    navLinkMap.set(link.dataset.nav, link);
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          navLinkMap.forEach((link) => link.classList.remove("active"));
+          const activeLink = navLinkMap.get(entry.target.id);
+          if (activeLink) activeLink.classList.add("active");
+        }
+      });
+    },
+    { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+  );
+
+  sections.forEach((section) => observer.observe(section));
 }
 
 async function init() {
-  await loadAndRenderSection(DATA_BASE_PATH, "latest-status-list", "trend-charts", "累計変動回数");
-  await loadAndRenderSection("data/stocks", "stock-status-list", "stock-trend-charts", "累計最安値更新回数");
+  initNavHighlight();
+
+  const stockEntries = await loadAndRenderSection(
+    "data/stocks",
+    "stock-status-list",
+    "stock-trend-charts",
+    "累計最安値更新回数",
+    "#34d399"
+  );
+  const webpageEntries = await loadAndRenderSection(
+    DATA_BASE_PATH,
+    "latest-status-list",
+    "trend-charts",
+    "累計変動回数",
+    "#7c8aa8"
+  );
+
+  renderSummary(stockEntries, webpageEntries);
 }
 
 init();

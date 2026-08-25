@@ -4,37 +4,87 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Webデータ変動監視ダッシュボード</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230f172a'/%3E%3Cpath d='M5 17V10M12 17V6M19 17V13' stroke='%2360a5fa' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230a0f1c'/%3E%3Cpath d='M5 17V10M12 17V6M19 17V13' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
-  <header>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M5 17V10M12 17V6M19 17V13" />
+          </svg>
+        </span>
+        監視ダッシュボード
+      </a>
+      <ul class="nav-links">
+        <li><a href="#stocks" class="nav-link" data-nav="stocks">株価</a></li>
+        <li><a href="#webpages" class="nav-link" data-nav="webpages">Webページ監視</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
     <h1>Webデータ変動監視ダッシュボード</h1>
     <p class="subtitle">GitHub Actionsが定期的にデータを取得し、自動で更新しています</p>
   </header>
 
+  <div class="summary-strip" id="summary-strip">
+    <div class="stat-tile">
+      <span class="stat-tile-label">監視銘柄数</span>
+      <span class="stat-tile-value is-accent" id="stat-stock-count">–</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-tile-label">監視ページ数</span>
+      <span class="stat-tile-value" id="stat-webpage-count">–</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-tile-label">最終更新</span>
+      <span class="stat-tile-value" id="stat-last-checked">–</span>
+    </div>
+  </div>
+
   <main>
-    <section>
-      <h2>最新ステータス</h2>
-      <div id="latest-status-list" class="status-grid"></div>
+
+    <!-- ========== 株価（主役） ========== -->
+    <section id="stocks" class="section section-stocks">
+      <div class="section-header">
+        <h2>株価</h2>
+        <p class="subtitle">日本の五大商社。終値が過去2か月の最安値を更新するとメールで通知します</p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">最新ステータス</h3>
+        <div id="stock-status-list" class="status-grid"></div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">最安値更新の推移</h3>
+        <div id="stock-trend-charts" class="chart-grid"></div>
+      </div>
     </section>
 
-    <section>
-      <h2>変動の推移</h2>
-      <div id="trend-charts" class="chart-grid"></div>
+    <!-- ========== Webページ監視（サンプル） ========== -->
+    <section id="webpages" class="section section-webpages">
+      <div class="section-header">
+        <h2>Webページ監視（サンプル）</h2>
+        <p class="subtitle">動作確認用の例。実際に監視したいページに差し替え可能です</p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">最新ステータス</h3>
+        <div id="latest-status-list" class="status-grid"></div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">変動の推移</h3>
+        <div id="trend-charts" class="chart-grid"></div>
+      </div>
     </section>
 
-    <section>
-      <h2>株価 · 最新ステータス</h2>
-      <p class="subtitle">日本の五大商社。終値が過去2か月の最安値を更新するとメールで通知します</p>
-      <div id="stock-status-list" class="status-grid"></div>
-    </section>
-
-    <section>
-      <h2>株価 · 最安値更新の推移</h2>
-      <div id="stock-trend-charts" class="chart-grid"></div>
-    </section>
   </main>
 
   <footer>
