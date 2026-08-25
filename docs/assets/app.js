@@ -62,58 +62,75 @@ function groupHistoryByTarget(historyEntries) {
   return grouped;
 }
 
-function renderTrendCharts(historyEntries) {
-  const container = document.getElementById("trend-charts");
-  container.innerHTML = "";
+function renderChartCard(container, targetName, entries) {
+  const chartCard = document.createElement("div");
+  chartCard.className = "chart-card";
 
-  if (historyEntries.length === 0) {
-    container.innerHTML = '<p class="empty-state">暂无变动记录，趋势图会在检测到第一次变动后出现。</p>';
+  const title = document.createElement("h3");
+  title.textContent = targetName;
+  chartCard.appendChild(title);
+
+  if (entries.length === 0) {
+    const emptyState = document.createElement("p");
+    emptyState.className = "empty-state";
+    emptyState.textContent = "暂无变动记录，趋势图会在检测到第一次变动后出现。";
+    chartCard.appendChild(emptyState);
+    container.appendChild(chartCard);
     return;
   }
 
+  const canvas = document.createElement("canvas");
+  chartCard.appendChild(canvas);
+  container.appendChild(chartCard);
+
+  new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: entries.map((entry) => formatTimestamp(entry.changed_at)),
+      datasets: [
+        {
+          label: "累计变动次数",
+          data: entries.map((_, index) => index + 1),
+          borderColor: "#60a5fa",
+          backgroundColor: "rgba(96, 165, 250, 0.2)",
+          stepped: true,
+          fill: true,
+          tension: 0,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 },
+        },
+      },
+    },
+  });
+}
+
+function renderTrendCharts(historyEntries, latestStatusEntries) {
+  const container = document.getElementById("trend-charts");
+  container.innerHTML = "";
+
   const groupedByTarget = groupHistoryByTarget(historyEntries);
+  const knownTargetNames = new Set([
+    ...latestStatusEntries.map((entry) => entry.target),
+    ...groupedByTarget.keys(),
+  ]);
 
-  for (const [targetName, entries] of groupedByTarget.entries()) {
-    const chartCard = document.createElement("div");
-    chartCard.className = "chart-card";
+  if (knownTargetNames.size === 0) {
+    container.innerHTML = '<p class="empty-state">暂无监测数据，等待第一次 Actions 运行。</p>';
+    return;
+  }
 
-    const title = document.createElement("h3");
-    title.textContent = targetName;
-    chartCard.appendChild(title);
-
-    const canvas = document.createElement("canvas");
-    chartCard.appendChild(canvas);
-    container.appendChild(chartCard);
-
-    new Chart(canvas, {
-      type: "line",
-      data: {
-        labels: entries.map((entry) => formatTimestamp(entry.changed_at)),
-        datasets: [
-          {
-            label: "累计变动次数",
-            data: entries.map((_, index) => index + 1),
-            borderColor: "#60a5fa",
-            backgroundColor: "rgba(96, 165, 250, 0.2)",
-            stepped: true,
-            fill: true,
-            tension: 0,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { precision: 0 },
-          },
-        },
-      },
-    });
+  for (const targetName of knownTargetNames) {
+    renderChartCard(container, targetName, groupedByTarget.get(targetName) ?? []);
   }
 }
 
@@ -124,7 +141,7 @@ async function init() {
   ]);
 
   renderLatestStatusList(latestStatusEntries);
-  renderTrendCharts(historyEntries);
+  renderTrendCharts(historyEntries, latestStatusEntries);
 }
 
 init();
