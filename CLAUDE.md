@@ -12,6 +12,7 @@
 
 - **Python 3.11+**：网页抓取（`requests` + `beautifulsoup4`）、内容比较、生成历史数据
 - **Resend API**：免费邮件通知（HTTP API 调用，无需 SMTP 服务器）
+- **雅虎财经非官方图表接口**：免费股票历史价格查询，无需注册/密钥（详见"股票价格监测"一节）
 - **Chart.js**：前端可视化面板，纯静态页面，托管在 GitHub Pages
 - **GitHub Actions**：`schedule` 触发，定时运行抓取任务并自动 commit 结果
 
@@ -41,9 +42,17 @@
 │       ├── snapshots/           # 每个监测目标的最新快照（用于下次比较）
 │       ├── latest.json          # 所有目标的最新状态（供“最新状态”列表使用，每次运行整体覆盖）
 │       └── history.json         # 所有目标的历史变动记录（只追加），供 Chart.js 读取
+├── config/
+│   └── stocks.yaml            # 股票监测目标（名称、雅虎财经代码）
+├── src/
+│   ├── stock_api.py           # 调雅虎财经非官方接口拿每日收盘价 + 判断是否创 2 个月新低
+│   └── stocks_main.py         # 编排入口：查价 -> 判断新低 -> 通知 -> 落盘
+├── stocks.py                  # 根目录编排入口，内部调用 src/stocks_main.py::run
+├── docs/data/stocks/          # 股票监测的数据，独立于网页监测的 docs/data/（见下方"股票价格监测"一节）
 ├── .github/
 │   └── workflows/
-│       └── monitor.yml        # 定时任务：每 24 小时运行一次网页抓取脚本并 commit 结果
+│       ├── monitor.yml        # 定时任务：每 24 小时运行一次网页抓取脚本并 commit 结果
+│       └── stocks.yml         # 定时任务：东证收盘后运行一次股票查价脚本并 commit 结果
 ├── requirements.txt
 └── .env.example                # 环境变量示例，不含真实密钥
 ```
@@ -131,6 +140,17 @@ targets:
 - 面板源码放在 `docs/` 目录，通过仓库 Settings 中开启 GitHub Pages（Source: Deploy from a branch，目录选 `docs/`），实现零成本静态托管。
 - `docs/index.html` + `docs/assets/app.js` 用原生 JS + Chart.js（通过 CDN 引入）读取同目录下的 `docs/data/latest.json`（最新状态列表）和 `docs/data/history.json`（按目标分组绘制变动趋势图），均为页面同源相对路径 fetch，本地用 `python -m http.server` 在 `docs/` 下起服务即可验证。
 - 面板为纯前端展示，不包含任何密钥、不发起需要认证的请求；`history.json`/`latest.json` 为空或某目标暂无历史记录时需展示空态提示，不能渲染出错的图表。
+
+### 9. 股票价格监测（日本五大商社）
+
+和网页监测并列、独立运作的子系统，监测标的固定为伊藤忠商事（8001.T）、三菱商事（8058.T）、三井物産（8031.T）、住友商事（8053.T）、丸紅（8002.T）：
+
+- **数据来源**：雅虎财经的非官方图表接口 `https://query1.finance.yahoo.com/v8/finance/chart/{symbol}`，免费、无需注册/密钥，实测对东证股票可用（`src/stock_api.py` 里已验证）。这是一个**未公开文档化的接口**（很多 Python 股票数据库比如 yfinance 底层也是调这个），不是 Yahoo 官方承诺长期稳定的公共 API，存在被限流/调整的可能——本项目每天只调用 5 次（每支股票一次），风险很低，但如果哪天突然大面积报错，说明接口变了，需要换数据源，不要花时间去猜是不是代码问题。
+- **"2 个月最低价"检测逻辑**：每次运行请求 `range=2mo`，一次性拿到最近 2 个月的每日收盘价（不需要像网页监测那样逐日累积历史）。判定"创新低"的规则是：**当天收盘价严格低于同一 2 个月窗口内其它所有交易日的收盘价**（`src/stock_api.py::detect_new_low`）。价格持平不算创新低，避免在低位震荡时重复提醒；不需要用户配置价格阈值，逻辑本身是自适应的。
+- **同一交易日不重复提醒**：即使当天误触发多次 workflow（比如手动重跑），也只会在 `docs/data/stocks/snapshots/<symbol>.json` 里记的 `last_alert_date` 还是今天时跳过，不会同一天发两封邮件。
+- **数据存储**：独立于 `docs/data/`，放在 `docs/data/stocks/`（同样是 `snapshots/`、`latest.json`、`history.json` 三件套，字段结构与网页监测一致，前端渲染函数原样复用）。
+- **邮件通知**：复用 `src/notifier.py`，不需要新写发送逻辑。
+- **定时任务**：独立的 `.github/workflows/stocks.yml`，`cron: '30 7 * * 1-5'`（东证收盘 15:00 JST = 06:00 UTC 之后、只在工作一到五运行，周末不交易运行也没意义）。**不需要额外的 Secrets**——数据源本身免费免注册，邮件复用已有的 `RESEND_API_KEY`/`NOTIFY_TO_EMAIL`/`NOTIFY_FROM_EMAIL`。
 
 ## 开发与提交约定
 

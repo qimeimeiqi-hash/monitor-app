@@ -146,6 +146,7 @@ async function loadAndRenderSection(dataBasePath, statusContainerId, chartContai
 
 async function init() {
   await loadAndRenderSection(DATA_BASE_PATH, "latest-status-list", "trend-charts", "累计变动次数");
+  await loadAndRenderSection("data/stocks", "stock-status-list", "stock-trend-charts", "累计创新低次数");
 }
 
 init();

@@ -1,0 +1,29 @@
+# 股票价格监测目标。数据来自雅虎财经的非官方图表接口（免费、无需注册/密钥），
+# 每次运行拿最近 2 个月的每日收盘价；当天收盘价如果比过去 2 个月里其它任何一个
+# 交易日都低（即创下"2 个月内最低价"），才会发邮件提醒——平价维持在低位不会
+# 重复提醒，只在真正创新低的那一天提醒一次。
+#
+# 字段说明：
+#   name     展示名称
+#   symbol   雅虎财经代码：东证股票用 "<证券代码>.T"
+#   enabled  是否参与本次运行
+stocks:
+  - name: "伊藤忠商事"
+    symbol: "8001.T"
+    enabled: true
+
+  - name: "三菱商事"
+    symbol: "8058.T"
+    enabled: true
+
+  - name: "三井物産"
+    symbol: "8031.T"
+    enabled: true
+
+  - name: "住友商事"
+    symbol: "8053.T"
+    enabled: true
+
+  - name: "丸紅"
+    symbol: "8002.T"
+    enabled: true

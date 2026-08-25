@@ -1,0 +1,32 @@
+[
+  {
+    "target": "伊藤忠商事",
+    "url": "https://finance.yahoo.com/quote/8001.T",
+    "content": "JPY 2118.0（2026-08-25 收盘）",
+    "checked_at": "2026-08-25T08:09:31.951198+00:00"
+  },
+  {
+    "target": "三菱商事",
+    "url": "https://finance.yahoo.com/quote/8058.T",
+    "content": "JPY 4765.0（2026-08-25 收盘）",
+    "checked_at": "2026-08-25T08:09:32.258839+00:00"
+  },
+  {
+    "target": "三井物産",
+    "url": "https://finance.yahoo.com/quote/8031.T",
+    "content": "JPY 4949.0（2026-08-25 收盘）",
+    "checked_at": "2026-08-25T08:09:32.563638+00:00"
+  },
+  {
+    "target": "住友商事",
+    "url": "https://finance.yahoo.com/quote/8053.T",
+    "content": "JPY 1769.0（2026-08-25 收盘）",
+    "checked_at": "2026-08-25T08:09:32.858414+00:00"
+  },
+  {
+    "target": "丸紅",
+    "url": "https://finance.yahoo.com/quote/8002.T",
+    "content": "JPY 4957.0（2026-08-25 收盘）",
+    "checked_at": "2026-08-25T08:09:33.132295+00:00"
+  }
+]

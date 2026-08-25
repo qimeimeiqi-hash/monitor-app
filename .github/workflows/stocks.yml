@@ -1,0 +1,46 @@
+name: Stock Prices
+
+on:
+  schedule:
+    # Tokyo Stock Exchange closes at 15:00 JST = 06:00 UTC. Run a bit after
+    # close, Monday-Friday only (TSE doesn't trade weekends, so a weekend run
+    # would just re-check Friday's already-seen closing price for nothing).
+    - cron: "30 7 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  check-stock-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check stock prices
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_TO_EMAIL: ${{ secrets.NOTIFY_TO_EMAIL }}
+          NOTIFY_FROM_EMAIL: ${{ secrets.NOTIFY_FROM_EMAIL }}
+        run: python stocks.py
+
+      - name: Commit and push updated stock data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/stocks
+          if git diff --cached --quiet; then
+            echo "No stock data changes to commit"
+          else
+            git commit -m "chore: update stock price data $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push
+          fi
