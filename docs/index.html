@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Webデータ変動監視ダッシュボード</title>
+  <title>株価・Webサイト監視ダッシュボード</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230a0f1c'/%3E%3Cpath d='M5 17V10M12 17V6M19 17V13' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -12,14 +12,14 @@
 
   <nav class="navbar" id="navbar">
     <div class="nav-inner">
-      <a href="#top" class="brand">
+      <span class="brand">
         <span class="brand-mark">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
             <path d="M5 17V10M12 17V6M19 17V13" />
           </svg>
         </span>
-        監視ダッシュボード
-      </a>
+        株価・Web監視
+      </span>
       <ul class="nav-links">
         <li><a href="#stocks" class="nav-link" data-nav="stocks">株価</a></li>
         <li><a href="#webpages" class="nav-link" data-nav="webpages">Webページ監視</a></li>
@@ -28,7 +28,7 @@
   </nav>
 
   <header class="hero" id="top">
-    <h1>Webデータ変動監視ダッシュボード</h1>
+    <h1>株価・Webサイト監視ダッシュボード</h1>
     <p class="subtitle">GitHub Actionsが定期的にデータを取得し、自動で更新しています</p>
   </header>
 
@@ -67,11 +67,11 @@
       </div>
     </section>
 
-    <!-- ========== Webページ監視（サンプル） ========== -->
+    <!-- ========== Webページ監視 ========== -->
     <section id="webpages" class="section section-webpages">
       <div class="section-header">
-        <h2>Webページ監視（サンプル）</h2>
-        <p class="subtitle">動作確認用の例。実際に監視したいページに差し替え可能です</p>
+        <h2>Webページ監視</h2>
+        <p class="subtitle">指定したWebページの内容変化を検知し、更新があった際にお知らせします</p>
       </div>
 
       <div class="subsection">
