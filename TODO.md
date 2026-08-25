@@ -117,7 +117,7 @@
 ### 4.3 GitHub Actions
 - [x] `.github/workflows/stocks.yml`：独立于 `monitor.yml` 的定时任务，`cron: '30 7 * * 1-5'`（东证收盘 15:00 JST = 06:00 UTC 后，只在工作日运行），YAML 语法已校验
 - [x] **不需要新增任何 Secrets**——数据源免费免注册，邮件复用已有的 `RESEND_API_KEY`/`NOTIFY_TO_EMAIL`/`NOTIFY_FROM_EMAIL`，这一点比机票那次简单很多
-- [ ] 推送到 GitHub 后，手动触发一次 `workflow_dispatch` 做云端端到端验证（本地已经验证过真实数据能拿到，云端主要是确认 commit/push 权限和 Pages 更新没问题）
+- [x] 推送到 GitHub 后手动触发了一次 `workflow_dispatch`，云端 run 全部步骤 success，日志里没有 `[ERROR]`/`[WARN]`，`docs/data/stocks/latest.json` 正确 commit & push，GitHub Pages 面板已同步显示最新数据（`curl` 直接确认过线上返回内容）
 
 ### 已知风险 / 需要你留意
 - 雅虎财经这个接口是**非官方**的（没有公开文档、不是 Yahoo 承诺维护的公共 API），存在被限流或悄悄改版的可能。当前设计每天只调用 5 次，风险很低，但如果哪天 workflow 突然大批报错，大概率是这个接口的问题，不是代码逻辑坏了。
