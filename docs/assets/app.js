@@ -142,11 +142,12 @@ async function loadAndRenderWebpageSection() {
   return latestStatusEntries;
 }
 
-function renderSummary(stockEntries, klineEntries, webpageEntries) {
-  const allEntries = [...stockEntries, ...klineEntries, ...webpageEntries];
-  const lastCheckedTimes = allEntries.map((entry) => entry.checked_at).filter(Boolean);
-  const mostRecent = lastCheckedTimes.length > 0 ? lastCheckedTimes.sort().at(-1) : null;
+function mostRecentCheckedAt(entries) {
+  const checkedAtTimes = entries.map((entry) => entry.checked_at).filter(Boolean);
+  return checkedAtTimes.length > 0 ? checkedAtTimes.sort().at(-1) : null;
+}
 
+function renderSummary(stockEntries, klineEntries, webpageEntries) {
   // 株価（2か月最安値）とK線シグナルは対象銘柄が重なるため、名称で重複を除いた
   // 銘柄数（＝実際に監視している銘柄の種類数）を表示する。
   const uniqueStockNames = new Set([
@@ -156,7 +157,13 @@ function renderSummary(stockEntries, klineEntries, webpageEntries) {
 
   document.getElementById("stat-stock-count").textContent = String(uniqueStockNames.size);
   document.getElementById("stat-webpage-count").textContent = String(webpageEntries.length);
-  document.getElementById("stat-last-checked").textContent = formatTimestamp(mostRecent);
+
+  // 3つの監視システムはそれぞれ別のスケジュールで動くGitHub Actionsから独立に
+  // 更新されるため、1つの「最終更新」に丸めるとどれかが止まっていても気づけない。
+  // システムごとに最終更新時刻を分けて表示する。
+  document.getElementById("stat-stock-last-checked").textContent = formatTimestamp(mostRecentCheckedAt(stockEntries));
+  document.getElementById("stat-kline-last-checked").textContent = formatTimestamp(mostRecentCheckedAt(klineEntries));
+  document.getElementById("stat-webpage-last-checked").textContent = formatTimestamp(mostRecentCheckedAt(webpageEntries));
 }
 
 function initNavHighlight() {
