@@ -1,117 +1,113 @@
+// トップページ（docs/index.html）専用のロジック。
+// 「株価」「K線シグナル」は銘柄ごとの詳細を stock-detail.html / kline-detail.html に切り出し、
+// ここでは一覧性を保つため、銘柄カード（名称・現在値・ミニグラフ）だけを並べる。
+
 const DATA_BASE_PATH = "data";
+const STOCK_MINI_CHART_COLOR = "#34d399";
+const KLINE_MINI_CHART_COLOR = "#7c8aa8";
+const KLINE_MINI_CANDLE_COUNT = 30;
 
-async function fetchJson(path, fallback) {
-  try {
-    const response = await fetch(path, { cache: "no-store" });
-    if (!response.ok) {
-      return fallback;
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Failed to load ${path}:`, error);
-    return fallback;
+function renderOverviewGridEmptyState(container) {
+  container.innerHTML = '<p class="empty-state">監視データはまだありません。最初の Actions 実行をお待ちください。</p>';
+}
+
+function appendMiniChartOrNote(card, values, seriesColor, emptyNoteText) {
+  if (values.length < 2) {
+    const note = document.createElement("p");
+    note.className = "overview-card-note";
+    note.textContent = emptyNoteText;
+    card.appendChild(note);
+    return;
   }
+  const chartWrap = document.createElement("div");
+  chartWrap.className = "mini-chart-wrap";
+  const canvas = document.createElement("canvas");
+  chartWrap.appendChild(canvas);
+  card.appendChild(chartWrap);
+  renderMiniLineChart(canvas, values, seriesColor);
 }
 
-function formatTimestamp(isoString) {
-  if (!isoString) {
-    return "-";
-  }
-  return new Date(isoString).toLocaleString("ja-JP", { hour12: false });
-}
-
-function escapeHtml(value) {
-  const div = document.createElement("div");
-  div.textContent = value ?? "";
-  return div.innerHTML;
-}
-
-function renderLatestStatusList(latestStatusEntries, containerId) {
+function renderStockOverviewGrid(latestStatusEntries, historyEntries, containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = "";
 
   if (latestStatusEntries.length === 0) {
-    container.innerHTML = '<p class="empty-state">監視データはまだありません。最初の Actions 実行をお待ちください。</p>';
+    renderOverviewGridEmptyState(container);
     return;
   }
 
+  const groupedByTarget = groupHistoryByTarget(historyEntries);
+
   for (const entry of latestStatusEntries) {
-    const card = document.createElement("div");
-    card.className = "status-card";
+    const card = document.createElement("a");
+    card.className = "overview-card";
+    card.href = `stock-detail.html?id=${encodeURIComponent(entry.id)}`;
     card.innerHTML = `
       <h3>${escapeHtml(entry.target)}</h3>
-      <p class="status-url"><a href="${escapeHtml(entry.url)}" target="_blank" rel="noopener">${escapeHtml(entry.url)}</a></p>
-      <p class="status-meta">最終確認：${formatTimestamp(entry.checked_at)}</p>
-      <p class="status-content">${escapeHtml(entry.content)}</p>
+      <p class="overview-card-content">${escapeHtml(entry.content)}</p>
     `;
+
+    const newLowCounts = (groupedByTarget.get(entry.target) ?? []).map((_, index) => index + 1);
+    appendMiniChartOrNote(card, newLowCounts, STOCK_MINI_CHART_COLOR, "2か月最安値の更新記録はまだありません");
+
     container.appendChild(card);
   }
 }
 
-function groupHistoryByTarget(historyEntries) {
-  const grouped = new Map();
-  for (const entry of historyEntries) {
-    if (!grouped.has(entry.target)) {
-      grouped.set(entry.target, []);
-    }
-    grouped.get(entry.target).push(entry);
-  }
-  for (const entries of grouped.values()) {
-    entries.sort((a, b) => new Date(a.changed_at) - new Date(b.changed_at));
-  }
-  return grouped;
-}
+async function renderKlineOverviewGrid(latestStatusEntries, historyEntries, containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
 
-function renderChartCard(container, targetName, entries, seriesLabel, seriesColor) {
-  const chartCard = document.createElement("div");
-  chartCard.className = "chart-card";
-
-  const title = document.createElement("h3");
-  title.textContent = targetName;
-  chartCard.appendChild(title);
-
-  if (entries.length === 0) {
-    const emptyState = document.createElement("p");
-    emptyState.className = "empty-state";
-    emptyState.textContent = "変動記録はまだありません。最初の変動を検知すると推移グラフが表示されます。";
-    chartCard.appendChild(emptyState);
-    container.appendChild(chartCard);
+  if (latestStatusEntries.length === 0) {
+    renderOverviewGridEmptyState(container);
     return;
   }
 
-  const canvas = document.createElement("canvas");
-  chartCard.appendChild(canvas);
-  container.appendChild(chartCard);
+  const groupedByTarget = groupHistoryByTarget(historyEntries);
 
-  new Chart(canvas, {
-    type: "line",
-    data: {
-      labels: entries.map((entry) => formatTimestamp(entry.changed_at)),
-      datasets: [
-        {
-          label: seriesLabel,
-          data: entries.map((_, index) => index + 1),
-          borderColor: seriesColor,
-          backgroundColor: `${seriesColor}33`,
-          stepped: true,
-          fill: true,
-          tension: 0,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { precision: 0 },
-        },
-      },
-    },
-  });
+  for (const entry of latestStatusEntries) {
+    const card = document.createElement("a");
+    card.className = "overview-card";
+    card.href = `kline-detail.html?id=${encodeURIComponent(entry.id)}`;
+
+    const targetHistory = groupedByTarget.get(entry.target) ?? [];
+    const latestSignal = targetHistory.length > 0 ? targetHistory[targetHistory.length - 1] : null;
+    const badgeHtml = latestSignal
+      ? `<span class="signal-badge ${latestSignal.action}">${latestSignal.action === "buy" ? "買い" : "売り"}</span>`
+      : "";
+
+    card.innerHTML = `
+      <div class="overview-card-header">
+        <h3>${escapeHtml(entry.target)}</h3>
+        ${badgeHtml}
+      </div>
+      <p class="overview-card-content">${escapeHtml(entry.content)}</p>
+    `;
+
+    const candles = await fetchJson(`data/kline/candles/${entry.id}.json`, []);
+    const recentCloses = candles.slice(-KLINE_MINI_CANDLE_COUNT).map((candle) => candle.close);
+    appendMiniChartOrNote(card, recentCloses, KLINE_MINI_CHART_COLOR, "価格データはまだありません");
+
+    container.appendChild(card);
+  }
+}
+
+async function loadAndRenderStockOverview() {
+  const [latestStatusEntries, historyEntries] = await Promise.all([
+    fetchJson("data/stocks/latest.json", []),
+    fetchJson("data/stocks/history.json", []),
+  ]);
+  renderStockOverviewGrid(latestStatusEntries, historyEntries, "stock-overview-grid");
+  return latestStatusEntries;
+}
+
+async function loadAndRenderKlineOverview() {
+  const [latestStatusEntries, historyEntries] = await Promise.all([
+    fetchJson("data/kline/latest.json", []),
+    fetchJson("data/kline/history.json", []),
+  ]);
+  await renderKlineOverviewGrid(latestStatusEntries, historyEntries, "kline-overview-grid");
+  return latestStatusEntries;
 }
 
 function renderTrendCharts(historyEntries, latestStatusEntries, containerId, seriesLabel, seriesColor) {
@@ -134,179 +130,14 @@ function renderTrendCharts(historyEntries, latestStatusEntries, containerId, ser
   }
 }
 
-function computeSimpleMovingAverage(values, window) {
-  return values.map((_, index) => {
-    if (index < window - 1) {
-      return null;
-    }
-    const windowSlice = values.slice(index - window + 1, index + 1);
-    return windowSlice.reduce((sum, value) => sum + value, 0) / window;
-  });
-}
-
-function renderSignalHistory(historyEntries, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-
-  if (historyEntries.length === 0) {
-    container.innerHTML = '<p class="empty-state">シグナル履歴はまだありません。買い/売りシグナルが発生すると表示されます。</p>';
-    return;
-  }
-
-  const sortedEntries = [...historyEntries].sort((a, b) => new Date(b.changed_at) - new Date(a.changed_at));
-
-  for (const entry of sortedEntries) {
-    const card = document.createElement("div");
-    card.className = "signal-card";
-    const actionLabel = entry.action === "buy" ? "買い" : "売り";
-    const reasonsHtml = entry.reasons.map((reason) => `<li>${escapeHtml(reason)}</li>`).join("");
-    const stopLossHtml = entry.stop_loss_label
-      ? `<p class="signal-stop-loss">損切りライン：${escapeHtml(entry.stop_loss_label)}</p>`
-      : "";
-    card.innerHTML = `
-      <div class="signal-card-header">
-        <span class="signal-badge ${entry.action}">${actionLabel}</span>
-        <h3>${escapeHtml(entry.target)}</h3>
-      </div>
-      <p class="status-meta">${formatTimestamp(entry.changed_at)}</p>
-      <p class="status-content">${escapeHtml(entry.price_label)}</p>
-      <ul class="signal-reasons">${reasonsHtml}</ul>
-      ${stopLossHtml}
-    `;
-    container.appendChild(card);
-  }
-}
-
-const CANDLESTICK_DISPLAY_COUNT = 60;
-
-function renderCandlestickChartCard(container, targetName, candles) {
-  const chartCard = document.createElement("div");
-  chartCard.className = "chart-card candle-chart-card";
-
-  const title = document.createElement("h3");
-  title.textContent = targetName;
-  chartCard.appendChild(title);
-
-  if (candles.length === 0) {
-    const emptyState = document.createElement("p");
-    emptyState.className = "empty-state";
-    emptyState.textContent = "ローソク足データはまだありません。";
-    chartCard.appendChild(emptyState);
-    container.appendChild(chartCard);
-    return;
-  }
-
-  // SMA is computed over the full history so it stays accurate at the edge of
-  // the displayed window, then only the trailing window is actually rendered
-  // (showing all ~6 months of daily candles in one fixed-width card would
-  // squeeze each candle into an unreadable sliver).
-  const closes = candles.map((candle) => candle.close);
-  const sma20Full = computeSimpleMovingAverage(closes, 20);
-  const sma60Full = computeSimpleMovingAverage(closes, 60);
-
-  const visibleCandles = candles.slice(-CANDLESTICK_DISPLAY_COUNT);
-  const sma20 = sma20Full.slice(-CANDLESTICK_DISPLAY_COUNT);
-  const sma60 = sma60Full.slice(-CANDLESTICK_DISPLAY_COUNT);
-
-  const canvasWrap = document.createElement("div");
-  canvasWrap.className = "candle-chart-canvas-wrap";
-  const canvas = document.createElement("canvas");
-  canvasWrap.appendChild(canvas);
-  chartCard.appendChild(canvasWrap);
-  container.appendChild(chartCard);
-
-  const bullishColor = "#34d399";
-  const bearishColor = "#f87171";
-
-  new Chart(canvas, {
-    type: "bar",
-    data: {
-      labels: visibleCandles.map((candle) => candle.date),
-      datasets: [
-        {
-          label: "値幅",
-          data: visibleCandles.map((candle) => [candle.low, candle.high]),
-          backgroundColor: visibleCandles.map((candle) => (candle.close >= candle.open ? bullishColor : bearishColor)),
-          barPercentage: 0.2,
-          categoryPercentage: 0.9,
-          grouped: false,
-        },
-        {
-          label: "実体",
-          data: visibleCandles.map((candle) => [Math.min(candle.open, candle.close), Math.max(candle.open, candle.close)]),
-          backgroundColor: visibleCandles.map((candle) => (candle.close >= candle.open ? bullishColor : bearishColor)),
-          barPercentage: 0.7,
-          categoryPercentage: 0.9,
-          grouped: false,
-        },
-        {
-          label: "SMA20",
-          type: "line",
-          data: sma20,
-          borderColor: "#7c8aa8",
-          pointRadius: 0,
-          borderWidth: 1.5,
-        },
-        {
-          label: "SMA60",
-          type: "line",
-          data: sma60,
-          borderColor: "#f4b860",
-          pointRadius: 0,
-          borderWidth: 1.5,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-      scales: {
-        x: { display: false },
-        y: { beginAtZero: false },
-      },
-    },
-  });
-}
-
-async function renderCandlestickCharts(statusEntries, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-
-  if (statusEntries.length === 0) {
-    container.innerHTML = '<p class="empty-state">監視データはまだありません。最初の Actions 実行をお待ちください。</p>';
-    return;
-  }
-
-  for (const entry of statusEntries) {
-    const candles = await fetchJson(`data/kline/candles/${entry.id}.json`, []);
-    renderCandlestickChartCard(container, entry.target, candles);
-  }
-}
-
-async function loadAndRenderKlineSection() {
-  const [statusEntries, historyEntries] = await Promise.all([
-    fetchJson("data/kline/latest.json", []),
-    fetchJson("data/kline/history.json", []),
-  ]);
-
-  renderLatestStatusList(statusEntries, "kline-status-list");
-  renderSignalHistory(historyEntries, "kline-signal-history");
-  await renderCandlestickCharts(statusEntries, "kline-candle-charts");
-
-  return statusEntries;
-}
-
-async function loadAndRenderSection(dataBasePath, statusContainerId, chartContainerId, seriesLabel, seriesColor) {
+async function loadAndRenderWebpageSection() {
   const [latestStatusEntries, historyEntries] = await Promise.all([
-    fetchJson(`${dataBasePath}/latest.json`, []),
-    fetchJson(`${dataBasePath}/history.json`, []),
+    fetchJson(`${DATA_BASE_PATH}/latest.json`, []),
+    fetchJson(`${DATA_BASE_PATH}/history.json`, []),
   ]);
 
-  renderLatestStatusList(latestStatusEntries, statusContainerId);
-  renderTrendCharts(historyEntries, latestStatusEntries, chartContainerId, seriesLabel, seriesColor);
+  renderLatestStatusList(latestStatusEntries, "latest-status-list");
+  renderTrendCharts(historyEntries, latestStatusEntries, "trend-charts", "累計変動回数", "#7c8aa8");
 
   return latestStatusEntries;
 }
@@ -347,22 +178,9 @@ function initNavHighlight() {
 async function init() {
   initNavHighlight();
 
-  const stockEntries = await loadAndRenderSection(
-    "data/stocks",
-    "stock-status-list",
-    "stock-trend-charts",
-    "累計最安値更新回数",
-    "#34d399"
-  );
-  await loadAndRenderKlineSection();
-
-  const webpageEntries = await loadAndRenderSection(
-    DATA_BASE_PATH,
-    "latest-status-list",
-    "trend-charts",
-    "累計変動回数",
-    "#7c8aa8"
-  );
+  const stockEntries = await loadAndRenderStockOverview();
+  await loadAndRenderKlineOverview();
+  const webpageEntries = await loadAndRenderWebpageSection();
 
   renderSummary(stockEntries, webpageEntries);
 }

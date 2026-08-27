@@ -38,8 +38,10 @@ def process_stock(stock: dict, data_dir: Path) -> tuple:
     price_data = fetch_daily_closes(stock["symbol"])
     latest_entry = price_data["daily_closes"][-1]
     checked_at = datetime.now(timezone.utc).isoformat()
+    stock_id = make_stock_id(stock)
 
     status_record = {
+        "id": stock_id,
         "target": stock["name"],
         "url": build_quote_link(stock["symbol"]),
         "content": format_price_label(price_data["currency"], latest_entry["close"], latest_entry["date"]),
@@ -50,7 +52,6 @@ def process_stock(stock: dict, data_dir: Path) -> tuple:
     if new_low is None:
         return status_record, None
 
-    stock_id = make_stock_id(stock)
     previous_snapshot = read_snapshot(stock_id, data_dir)
     already_alerted_today = previous_snapshot is not None and previous_snapshot.get("last_alert_date") == new_low["date"]
     if already_alerted_today:

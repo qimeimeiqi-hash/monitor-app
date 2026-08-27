@@ -397,13 +397,101 @@ main {
 /* ============================================================
    K線ローソク足チャート
    ============================================================ */
-#kline-candle-charts.chart-grid {
+#detail-candle-chart.chart-grid {
   grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
 }
 
 .candle-chart-canvas-wrap {
   position: relative;
   height: 260px;
+}
+
+/* ============================================================
+   一覧ページ：銘柄カード（株価／K線シグナル共通）
+   ============================================================ */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.85rem;
+}
+
+.overview-card {
+  display: block;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.05rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.overview-card:hover {
+  border-color: var(--section-accent, var(--color-accent));
+  transform: translateY(-1px);
+}
+
+.overview-card h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.overview-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.overview-card-content {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+}
+
+.overview-card-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.mini-chart-wrap {
+  position: relative;
+  height: 42px;
+  margin-top: 0.6rem;
+}
+
+/* ============================================================
+   詳細ページ（stock-detail.html / kline-detail.html）
+   ============================================================ */
+.detail-main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 1rem;
+}
+
+.back-link {
+  display: flex;
+}
+
+.detail-header {
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.detail-header h1 {
+  margin: 0 0 0.4rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.detail-current-value {
+  margin: 0.6rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-accent);
 }
 
 /* ============================================================
@@ -434,7 +522,8 @@ footer {
 
   .hero,
   .summary-strip,
-  main {
+  main,
+  .detail-main {
     padding-left: 1rem;
     padding-right: 1rem;
   }

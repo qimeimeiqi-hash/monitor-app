@@ -22,6 +22,15 @@ def write_config(config_path: Path, stocks: list) -> None:
     config_path.write_text(yaml.safe_dump({"stocks": stocks}), encoding="utf-8")
 
 
+def test_process_stock_status_record_includes_symbol_based_id_for_detail_page_links(tmp_path):
+    data = price_data([("2026-07-01", 2000.0), ("2026-08-25", 1950.0)])
+
+    with patch("src.stocks_main.fetch_daily_closes", return_value=data):
+        status_record, _ = process_stock(STOCK, tmp_path)
+
+    assert status_record["id"] == "8001-t"
+
+
 def test_process_stock_alerts_when_latest_close_is_a_new_two_month_low(tmp_path):
     data = price_data([("2026-07-01", 2000.0), ("2026-07-20", 1900.0), ("2026-08-25", 1750.0)])
 
@@ -29,6 +38,7 @@ def test_process_stock_alerts_when_latest_close_is_a_new_two_month_low(tmp_path)
         status_record, change_record = process_stock(STOCK, tmp_path)
 
     assert status_record["target"] == "伊藤忠商事"
+    assert status_record["id"] == "8001-t"
     assert "JPY 1750.0" in status_record["content"]
     assert change_record is not None
     assert "1900.0" in change_record["old_value"]

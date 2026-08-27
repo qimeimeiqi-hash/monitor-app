@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K線シグナル詳細｜株価・Webサイト監視ダッシュボード</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230a0f1c'/%3E%3Cpath d='M5 17V10M12 17V6M19 17V13' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html#kline" class="brand back-link">
+        <span class="brand-mark">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </span>
+        K線シグナル一覧に戻る
+      </a>
+    </div>
+  </nav>
+
+  <main class="detail-main">
+    <section id="detail-header" class="detail-header"></section>
+
+    <div class="subsection">
+      <h3 class="subsection-title">ローソク足チャート</h3>
+      <div id="detail-candle-chart" class="chart-grid"></div>
+    </div>
+
+    <div class="subsection">
+      <h3 class="subsection-title">シグナル履歴</h3>
+      <div id="detail-signal-history" class="signal-list"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Python + Resend + Chart.js + GitHub Actions · GitHub Pagesで完全無料運用</p>
+  </footer>
+
+  <script src="assets/common.js"></script>
+  <script src="assets/kline-detail.js"></script>
+</body>
+</html>
