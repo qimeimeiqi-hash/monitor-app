@@ -1,0 +1,45 @@
+name: K-line Buy/Sell Signals
+
+on:
+  schedule:
+    # Runs 15 minutes after stocks.yml (30 7 * * 1-5) so the two independent
+    # workflows don't race on committing/pushing to the same branch at once.
+    - cron: "45 7 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  check-kline-signals:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check K-line buy/sell signals
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_TO_EMAIL: ${{ secrets.NOTIFY_TO_EMAIL }}
+          NOTIFY_FROM_EMAIL: ${{ secrets.NOTIFY_FROM_EMAIL }}
+        run: python stocks_kline.py
+
+      - name: Commit and push updated K-line data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/kline
+          if git diff --cached --quiet; then
+            echo "No K-line data changes to commit"
+          else
+            git commit -m "chore: update K-line signal data $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push
+          fi

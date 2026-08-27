@@ -1,0 +1,34 @@
+# K線売買シグナル監視の対象銘柄。config/stocks.yaml（2か月最安値監視）とは完全に
+# 独立した設定ファイル。監視対象は同じ日本五大商社だが、判定ロジックも通知も
+# データ保存先（docs/data/kline/）もすべて別系統。
+#
+# 判定ロジックの概要（詳細な数値閾値は src/kline_patterns.py と src/kline_trend.py
+# を参照）：日足の始値・高値・安値・終値・出来高から、20日線/60日線によるトレンド、
+# 長期横盘（箱体）のブレイク、ローソク足の反転形態（陽包陰・陰包陽・鎚子線・
+# 明けの明星/宵の明星など）を組み合わせて買い/売りシグナルを判定し、Resend経由で
+# メール通知する。
+#
+# 字段说明：
+#   name     展示名称
+#   symbol   雅虎財経代码：東証股票用 "<証券代码>.T"
+#   enabled  是否参与本次运行
+stocks:
+  - name: "伊藤忠商事"
+    symbol: "8001.T"
+    enabled: true
+
+  - name: "三菱商事"
+    symbol: "8058.T"
+    enabled: true
+
+  - name: "三井物産"
+    symbol: "8031.T"
+    enabled: true
+
+  - name: "住友商事"
+    symbol: "8053.T"
+    enabled: true
+
+  - name: "丸紅"
+    symbol: "8002.T"
+    enabled: true

@@ -22,6 +22,7 @@
       </span>
       <ul class="nav-links">
         <li><a href="#stocks" class="nav-link" data-nav="stocks">株価</a></li>
+        <li><a href="#kline" class="nav-link" data-nav="kline">K線シグナル</a></li>
         <li><a href="#webpages" class="nav-link" data-nav="webpages">Webページ監視</a></li>
       </ul>
     </div>
@@ -64,6 +65,29 @@
       <div class="subsection">
         <h3 class="subsection-title">最安値更新の推移</h3>
         <div id="stock-trend-charts" class="chart-grid"></div>
+      </div>
+    </section>
+
+    <!-- ========== K線売買シグナル ========== -->
+    <section id="kline" class="section section-kline">
+      <div class="section-header">
+        <h2>K線シグナル</h2>
+        <p class="subtitle">トレンド・箱体ブレイク・ローソク足の反転形態を組み合わせて売買タイミングを判定し、根拠つきでメール通知します</p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">最新ステータス</h3>
+        <div id="kline-status-list" class="status-grid"></div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">ローソク足チャート</h3>
+        <div id="kline-candle-charts" class="chart-grid"></div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">シグナル履歴</h3>
+        <div id="kline-signal-history" class="signal-list"></div>
       </div>
     </section>
 
