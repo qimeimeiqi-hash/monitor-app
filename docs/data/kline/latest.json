@@ -1,0 +1,37 @@
+[
+  {
+    "id": "8001-t",
+    "target": "伊藤忠商事",
+    "url": "https://finance.yahoo.com/quote/8001.T",
+    "content": "トレンド: 上昇 ／ JPY 2116.5（2026-08-27 終値）",
+    "checked_at": "2026-08-27T03:45:12.268674+00:00"
+  },
+  {
+    "id": "8058-t",
+    "target": "三菱商事",
+    "url": "https://finance.yahoo.com/quote/8058.T",
+    "content": "トレンド: レンジ ／ JPY 4718.0（2026-08-27 終値）",
+    "checked_at": "2026-08-27T03:45:12.434073+00:00"
+  },
+  {
+    "id": "8031-t",
+    "target": "三井物産",
+    "url": "https://finance.yahoo.com/quote/8031.T",
+    "content": "トレンド: レンジ ／ JPY 4892.0（2026-08-27 終値）",
+    "checked_at": "2026-08-27T03:45:12.590753+00:00"
+  },
+  {
+    "id": "8053-t",
+    "target": "住友商事",
+    "url": "https://finance.yahoo.com/quote/8053.T",
+    "content": "トレンド: レンジ ／ JPY 1756.5（2026-08-27 終値）",
+    "checked_at": "2026-08-27T03:45:12.741533+00:00"
+  },
+  {
+    "id": "8002-t",
+    "target": "丸紅",
+    "url": "https://finance.yahoo.com/quote/8002.T",
+    "content": "トレンド: レンジ ／ JPY 4875.0（2026-08-27 終値）",
+    "checked_at": "2026-08-27T03:45:12.940231+00:00"
+  }
+]
