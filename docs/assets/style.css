@@ -204,6 +204,8 @@ main {
   font-weight: 800;
   position: relative;
   padding-left: 0.9rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .section-header h2::before {
@@ -526,5 +528,11 @@ footer {
   .detail-main {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
   }
 }
