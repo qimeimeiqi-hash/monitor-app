@@ -1,6 +1,7 @@
 # K線売買シグナル監視の対象銘柄。config/stocks.yaml（2か月最安値監視）とは完全に
-# 独立した設定ファイル。監視対象は同じ日本五大商社だが、判定ロジックも通知も
-# データ保存先（docs/data/kline/）もすべて別系統。
+# 独立した設定ファイル。日本五大商社に加えて、2か月最安値監視の対象にはなっていない
+# 銘柄（アクセンチュア/ハイディーラオ/アルファベット/エヌビディア）もここにだけ追加
+# している。判定ロジックも通知もデータ保存先（docs/data/kline/）もすべて別系統。
 #
 # 判定ロジックの概要（詳細な数値閾値は src/kline_patterns.py と src/kline_trend.py
 # を参照）：日足の始値・高値・安値・終値・出来高から、20日線/60日線によるトレンド、
@@ -10,7 +11,8 @@
 #
 # 字段说明：
 #   name     展示名称
-#   symbol   雅虎財経代码：東証股票用 "<証券代码>.T"
+#   symbol   雅虎財経代码：東証股票用 "<証券代码>.T"，美股/港股等其它市场直接用该市场
+#            自己的雅虎代码（如 "ACN"、"6862.HK"）
 #   enabled  是否参与本次运行
 stocks:
   - name: "伊藤忠商事"
@@ -31,4 +33,20 @@ stocks:
 
   - name: "丸紅"
     symbol: "8002.T"
+    enabled: true
+
+  - name: "アクセンチュア"
+    symbol: "ACN"
+    enabled: true
+
+  - name: "ハイディーラオ"
+    symbol: "6862.HK"
+    enabled: true
+
+  - name: "アルファベット（グーグル）"
+    symbol: "GOOGL"
+    enabled: true
+
+  - name: "エヌビディア"
+    symbol: "NVDA"
     enabled: true

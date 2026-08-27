@@ -1,0 +1,13 @@
+[
+  {
+    "target": "ハイディーラオ",
+    "url": "https://finance.yahoo.com/quote/6862.HK",
+    "changed_at": "2026-08-27T08:38:27.204513+00:00",
+    "action": "sell",
+    "price_label": "HKD 12.4（2026-08-27 終値）",
+    "reasons": [
+      "高値圏で出来高を伴う滞涨（十字星または長い上影線）が出現"
+    ],
+    "stop_loss_label": null
+  }
+]
