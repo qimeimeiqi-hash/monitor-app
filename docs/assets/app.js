@@ -142,12 +142,19 @@ async function loadAndRenderWebpageSection() {
   return latestStatusEntries;
 }
 
-function renderSummary(stockEntries, webpageEntries) {
-  const allEntries = [...stockEntries, ...webpageEntries];
+function renderSummary(stockEntries, klineEntries, webpageEntries) {
+  const allEntries = [...stockEntries, ...klineEntries, ...webpageEntries];
   const lastCheckedTimes = allEntries.map((entry) => entry.checked_at).filter(Boolean);
   const mostRecent = lastCheckedTimes.length > 0 ? lastCheckedTimes.sort().at(-1) : null;
 
-  document.getElementById("stat-stock-count").textContent = String(stockEntries.length);
+  // 株価（2か月最安値）とK線シグナルは対象銘柄が重なるため、名称で重複を除いた
+  // 銘柄数（＝実際に監視している銘柄の種類数）を表示する。
+  const uniqueStockNames = new Set([
+    ...stockEntries.map((entry) => entry.target),
+    ...klineEntries.map((entry) => entry.target),
+  ]);
+
+  document.getElementById("stat-stock-count").textContent = String(uniqueStockNames.size);
   document.getElementById("stat-webpage-count").textContent = String(webpageEntries.length);
   document.getElementById("stat-last-checked").textContent = formatTimestamp(mostRecent);
 }
@@ -179,10 +186,10 @@ async function init() {
   initNavHighlight();
 
   const stockEntries = await loadAndRenderStockOverview();
-  await loadAndRenderKlineOverview();
+  const klineEntries = await loadAndRenderKlineOverview();
   const webpageEntries = await loadAndRenderWebpageSection();
 
-  renderSummary(stockEntries, webpageEntries);
+  renderSummary(stockEntries, klineEntries, webpageEntries);
 }
 
 init();
