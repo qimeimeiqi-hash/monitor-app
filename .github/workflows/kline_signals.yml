@@ -39,7 +39,22 @@ jobs:
           git add docs/data/kline
           if git diff --cached --quiet; then
             echo "No K-line data changes to commit"
-          else
-            git commit -m "chore: update K-line signal data $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-            git push
+            exit 0
           fi
+          git commit -m "chore: update K-line signal data $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          # Other workflows (Monitor, Stock Prices) push to the same main
+          # branch and can land in between our commit and push if GitHub
+          # Actions runs delayed schedules back-to-back (the 15-minute cron
+          # offset from stocks.yml does not guarantee this can't happen).
+          # Retry with a rebase onto the latest main instead of failing.
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rejected on attempt $attempt, rebasing onto latest origin/main and retrying..."
+            git fetch origin main
+            git rebase origin/main
+            sleep $((RANDOM % 10 + 1))
+          done
+          echo "::error::Failed to push after 5 attempts"
+          exit 1
