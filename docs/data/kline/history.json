@@ -9,5 +9,27 @@
       "高値圏で出来高を伴う滞涨（十字星または長い上影線）が出現"
     ],
     "stop_loss_label": null
+  },
+  {
+    "target": "三菱商事",
+    "url": "https://finance.yahoo.com/quote/8058.T",
+    "changed_at": "2026-09-04T07:51:54.198429+00:00",
+    "action": "sell",
+    "price_label": "JPY 4902.0（2026-09-04 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
+  },
+  {
+    "target": "丸紅",
+    "url": "https://finance.yahoo.com/quote/8002.T",
+    "changed_at": "2026-09-04T07:51:54.497314+00:00",
+    "action": "sell",
+    "price_label": "JPY 5073.0（2026-09-04 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
   }
 ]
