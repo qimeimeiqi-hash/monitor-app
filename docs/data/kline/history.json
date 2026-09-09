@@ -42,5 +42,16 @@
       "安値圏で陽包陰（強気の包み足）が出現"
     ],
     "stop_loss_label": "HKD 11.2（2026-09-08 終値）"
+  },
+  {
+    "target": "ハイディーラオ",
+    "url": "https://finance.yahoo.com/quote/6862.HK",
+    "changed_at": "2026-09-09T07:52:25.817494+00:00",
+    "action": "sell",
+    "price_label": "HKD 10.4（2026-09-09 終値）",
+    "reasons": [
+      "長期箱体（¥11.1〜¥12.5）の下沿を割り込み（サポート崩壊、逃げ場のシグナル）"
+    ],
+    "stop_loss_label": null
   }
 ]
