@@ -53,5 +53,27 @@
       "長期箱体（¥11.1〜¥12.5）の下沿を割り込み（サポート崩壊、逃げ場のシグナル）"
     ],
     "stop_loss_label": null
+  },
+  {
+    "target": "伊藤忠商事",
+    "url": "https://finance.yahoo.com/quote/8001.T",
+    "changed_at": "2026-09-15T07:54:50.285172+00:00",
+    "action": "sell",
+    "price_label": "JPY 2321.0（2026-09-15 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
+  },
+  {
+    "target": "三井物産",
+    "url": "https://finance.yahoo.com/quote/8031.T",
+    "changed_at": "2026-09-15T07:54:50.587374+00:00",
+    "action": "sell",
+    "price_label": "JPY 5069.0（2026-09-15 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
   }
 ]
