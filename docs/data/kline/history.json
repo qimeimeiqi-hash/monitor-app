@@ -97,5 +97,16 @@
       "高値圏で陰包陽（弱気の包み足）が出現"
     ],
     "stop_loss_label": null
+  },
+  {
+    "target": "アクセンチュア",
+    "url": "https://finance.yahoo.com/quote/ACN",
+    "changed_at": "2026-09-22T12:49:47.583719+00:00",
+    "action": "sell",
+    "price_label": "USD 186.1（2026-09-21 終値）",
+    "reasons": [
+      "高値圏で出来高を伴う滞涨（十字星または長い上影線）が出現"
+    ],
+    "stop_loss_label": null
   }
 ]
