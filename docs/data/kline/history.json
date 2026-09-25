@@ -108,5 +108,16 @@
       "高値圏で出来高を伴う滞涨（十字星または長い上影線）が出現"
     ],
     "stop_loss_label": null
+  },
+  {
+    "target": "丸紅",
+    "url": "https://finance.yahoo.com/quote/8002.T",
+    "changed_at": "2026-09-25T12:58:31.042558+00:00",
+    "action": "buy",
+    "price_label": "JPY 4916.0（2026-09-25 終値）",
+    "reasons": [
+      "安値圏で鎚子線が出現（下値支持が強い）"
+    ],
+    "stop_loss_label": "JPY 4846.0（2026-09-25 終値）"
   }
 ]
