@@ -3,63 +3,63 @@
     "id": "8001-t",
     "target": "伊藤忠商事",
     "url": "https://finance.yahoo.com/quote/8001.T",
-    "content": "トレンド: レンジ ／ JPY 2207.5（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:32.207869+00:00"
+    "content": "トレンド: レンジ ／ JPY 2202.5（2026-10-01 終値）",
+    "checked_at": "2026-10-01T14:46:14.265289+00:00"
   },
   {
     "id": "8058-t",
     "target": "三菱商事",
     "url": "https://finance.yahoo.com/quote/8058.T",
-    "content": "トレンド: レンジ ／ JPY 4769.0（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:32.337591+00:00"
+    "content": "トレンド: レンジ ／ JPY 4722.0（2026-10-01 終値）",
+    "checked_at": "2026-10-01T14:46:14.368186+00:00"
   },
   {
     "id": "8031-t",
     "target": "三井物産",
     "url": "https://finance.yahoo.com/quote/8031.T",
-    "content": "トレンド: レンジ ／ JPY 4930.0（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:32.476219+00:00"
+    "content": "トレンド: レンジ ／ JPY 4916.0（2026-10-01 終値）",
+    "checked_at": "2026-10-01T14:46:14.482235+00:00"
   },
   {
     "id": "8053-t",
     "target": "住友商事",
     "url": "https://finance.yahoo.com/quote/8053.T",
-    "content": "トレンド: レンジ ／ JPY 1770.0（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:32.599035+00:00"
+    "content": "トレンド: レンジ ／ JPY 1751.5（2026-10-01 終値）",
+    "checked_at": "2026-10-01T14:46:14.603391+00:00"
   },
   {
     "id": "8002-t",
     "target": "丸紅",
     "url": "https://finance.yahoo.com/quote/8002.T",
-    "content": "トレンド: レンジ ／ JPY 4824.0（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:32.700357+00:00"
+    "content": "トレンド: レンジ ／ JPY 4832.0（2026-10-01 終値）",
+    "checked_at": "2026-10-01T14:46:14.704548+00:00"
   },
   {
     "id": "acn",
     "target": "アクセンチュア",
     "url": "https://finance.yahoo.com/quote/ACN",
-    "content": "トレンド: レンジ ／ USD 180.6（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:32.874213+00:00"
+    "content": "トレンド: レンジ ／ USD 220.8（2026-10-01 終値）",
+    "checked_at": "2026-10-01T14:46:14.825449+00:00"
   },
   {
     "id": "6862-hk",
     "target": "ハイディーラオ",
     "url": "https://finance.yahoo.com/quote/6862.HK",
     "content": "トレンド: 下降 ／ HKD 9.3（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:32.971997+00:00"
+    "checked_at": "2026-10-01T14:46:14.976873+00:00"
   },
   {
     "id": "googl",
     "target": "アルファベット（グーグル）",
     "url": "https://finance.yahoo.com/quote/GOOGL",
-    "content": "トレンド: レンジ ／ USD 350.8（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:33.060325+00:00"
+    "content": "トレンド: レンジ ／ USD 341.6（2026-10-01 終値）",
+    "checked_at": "2026-10-01T14:46:15.061188+00:00"
   },
   {
     "id": "nvda",
     "target": "エヌビディア",
     "url": "https://finance.yahoo.com/quote/NVDA",
-    "content": "トレンド: 上昇 ／ USD 230.4（2026-09-30 終値）",
-    "checked_at": "2026-09-30T14:14:33.151334+00:00"
+    "content": "トレンド: 上昇 ／ USD 230.6（2026-10-01 終値）",
+    "checked_at": "2026-10-01T14:46:15.144953+00:00"
   }
 ]
