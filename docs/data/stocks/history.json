@@ -12,5 +12,26 @@
     "changed_at": "2026-09-29T14:14:49.690602+00:00",
     "old_value": "直近2か月の最安値 JPY 4796.0",
     "new_value": "JPY 4719.0（2026-09-29 終値）（2か月ぶりの最安値を更新）"
+  },
+  {
+    "target": "三菱商事",
+    "url": "https://finance.yahoo.com/quote/8058.T",
+    "changed_at": "2026-10-08T14:47:21.771115+00:00",
+    "old_value": "直近2か月の最安値 JPY 4637.0",
+    "new_value": "JPY 4590.0（2026-10-08 終値）（2か月ぶりの最安値を更新）"
+  },
+  {
+    "target": "三井物産",
+    "url": "https://finance.yahoo.com/quote/8031.T",
+    "changed_at": "2026-10-08T14:47:21.883145+00:00",
+    "old_value": "直近2か月の最安値 JPY 4774.0",
+    "new_value": "JPY 4764.0（2026-10-08 終値）（2か月ぶりの最安値を更新）"
+  },
+  {
+    "target": "丸紅",
+    "url": "https://finance.yahoo.com/quote/8002.T",
+    "changed_at": "2026-10-08T14:47:22.203048+00:00",
+    "old_value": "直近2か月の最安値 JPY 4719.0",
+    "new_value": "JPY 4710.0（2026-10-08 終値）（2か月ぶりの最安値を更新）"
   }
 ]
