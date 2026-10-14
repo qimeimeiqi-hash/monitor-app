@@ -141,5 +141,16 @@
       "安値圏で鎚子線が出現（下値支持が強い）"
     ],
     "stop_loss_label": "JPY 4672.0（2026-10-08 終値）"
+  },
+  {
+    "target": "ハイディーラオ",
+    "url": "https://finance.yahoo.com/quote/6862.HK",
+    "changed_at": "2026-10-14T13:05:06.637763+00:00",
+    "action": "buy",
+    "price_label": "HKD 9.5（2026-10-14 終値）",
+    "reasons": [
+      "安値圏で陽包陰（強気の包み足）が出現"
+    ],
+    "stop_loss_label": "HKD 9.2（2026-10-14 終値）"
   }
 ]
