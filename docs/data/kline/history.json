@@ -152,5 +152,16 @@
       "安値圏で陽包陰（強気の包み足）が出現"
     ],
     "stop_loss_label": "HKD 9.2（2026-10-14 終値）"
+  },
+  {
+    "target": "エヌビディア",
+    "url": "https://finance.yahoo.com/quote/NVDA",
+    "changed_at": "2026-10-19T14:58:36.499124+00:00",
+    "action": "buy",
+    "price_label": "USD 217.8（2026-10-19 終値）",
+    "reasons": [
+      "安値圏で鎚子線が出現（縮量での押し目、下値支持が強い）"
+    ],
+    "stop_loss_label": "USD 214.7（2026-10-19 終値）"
   }
 ]
