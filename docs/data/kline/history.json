@@ -163,5 +163,27 @@
       "安値圏で鎚子線が出現（縮量での押し目、下値支持が強い）"
     ],
     "stop_loss_label": "USD 214.7（2026-10-19 終値）"
+  },
+  {
+    "target": "住友商事",
+    "url": "https://finance.yahoo.com/quote/8053.T",
+    "changed_at": "2026-10-21T13:14:35.499765+00:00",
+    "action": "buy",
+    "price_label": "JPY 1731.5（2026-10-21 終値）",
+    "reasons": [
+      "安値圏で鎚子線が出現（下値支持が強い）"
+    ],
+    "stop_loss_label": "JPY 1709.5（2026-10-21 終値）"
+  },
+  {
+    "target": "ハイディーラオ",
+    "url": "https://finance.yahoo.com/quote/6862.HK",
+    "changed_at": "2026-10-21T13:14:35.854840+00:00",
+    "action": "sell",
+    "price_label": "HKD 9.3（2026-10-21 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
   }
 ]
