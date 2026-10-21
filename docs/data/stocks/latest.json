@@ -3,35 +3,35 @@
     "id": "8001-t",
     "target": "伊藤忠商事",
     "url": "https://finance.yahoo.com/quote/8001.T",
-    "content": "JPY 2298.0（2026-10-20 終値）",
-    "checked_at": "2026-10-20T12:52:28.062593+00:00"
+    "content": "JPY 2304.0（2026-10-21 終値）",
+    "checked_at": "2026-10-21T13:04:55.169270+00:00"
   },
   {
     "id": "8058-t",
     "target": "三菱商事",
     "url": "https://finance.yahoo.com/quote/8058.T",
-    "content": "JPY 4712.0（2026-10-20 終値）",
-    "checked_at": "2026-10-20T12:52:28.185766+00:00"
+    "content": "JPY 4746.0（2026-10-21 終値）",
+    "checked_at": "2026-10-21T13:04:55.311679+00:00"
   },
   {
     "id": "8031-t",
     "target": "三井物産",
     "url": "https://finance.yahoo.com/quote/8031.T",
-    "content": "JPY 4950.0（2026-10-20 終値）",
-    "checked_at": "2026-10-20T12:52:28.280625+00:00"
+    "content": "JPY 4979.0（2026-10-21 終値）",
+    "checked_at": "2026-10-21T13:04:55.466457+00:00"
   },
   {
     "id": "8053-t",
     "target": "住友商事",
     "url": "https://finance.yahoo.com/quote/8053.T",
-    "content": "JPY 1709.0（2026-10-20 終値）",
-    "checked_at": "2026-10-20T12:52:28.366507+00:00"
+    "content": "JPY 1731.5（2026-10-21 終値）",
+    "checked_at": "2026-10-21T13:04:55.614957+00:00"
   },
   {
     "id": "8002-t",
     "target": "丸紅",
     "url": "https://finance.yahoo.com/quote/8002.T",
-    "content": "JPY 4880.0（2026-10-20 終値）",
-    "checked_at": "2026-10-20T12:52:28.466179+00:00"
+    "content": "JPY 4952.0（2026-10-21 終値）",
+    "checked_at": "2026-10-21T13:04:55.764141+00:00"
   }
 ]
