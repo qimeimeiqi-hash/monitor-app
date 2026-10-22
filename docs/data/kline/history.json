@@ -185,5 +185,16 @@
       "高値圏で陰包陽（弱気の包み足）が出現"
     ],
     "stop_loss_label": null
+  },
+  {
+    "target": "エヌビディア",
+    "url": "https://finance.yahoo.com/quote/NVDA",
+    "changed_at": "2026-10-22T13:11:37.910208+00:00",
+    "action": "buy",
+    "price_label": "USD 222.0（2026-10-21 終値）",
+    "reasons": [
+      "安値圏で鎚子線が出現（下値支持が強い）"
+    ],
+    "stop_loss_label": "USD 217.7（2026-10-21 終値）"
   }
 ]
