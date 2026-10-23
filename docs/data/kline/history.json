@@ -196,5 +196,38 @@
       "安値圏で鎚子線が出現（下値支持が強い）"
     ],
     "stop_loss_label": "USD 217.7（2026-10-21 終値）"
+  },
+  {
+    "target": "伊藤忠商事",
+    "url": "https://finance.yahoo.com/quote/8001.T",
+    "changed_at": "2026-10-23T12:51:43.841917+00:00",
+    "action": "sell",
+    "price_label": "JPY 2301.0（2026-10-23 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
+  },
+  {
+    "target": "三菱商事",
+    "url": "https://finance.yahoo.com/quote/8058.T",
+    "changed_at": "2026-10-23T12:51:43.931269+00:00",
+    "action": "sell",
+    "price_label": "JPY 4715.0（2026-10-23 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
+  },
+  {
+    "target": "住友商事",
+    "url": "https://finance.yahoo.com/quote/8053.T",
+    "changed_at": "2026-10-23T12:51:44.132428+00:00",
+    "action": "buy",
+    "price_label": "JPY 1691.0（2026-10-23 終値）",
+    "reasons": [
+      "安値圏で鎚子線が出現（下値支持が強い）"
+    ],
+    "stop_loss_label": "JPY 1647.5（2026-10-23 終値）"
   }
 ]
