@@ -262,5 +262,38 @@
       "高値圏で陰包陽（弱気の包み足）が出現"
     ],
     "stop_loss_label": null
+  },
+  {
+    "target": "三菱商事",
+    "url": "https://finance.yahoo.com/quote/8058.T",
+    "changed_at": "2026-10-30T14:31:02.110533+00:00",
+    "action": "sell",
+    "price_label": "JPY 4805.0（2026-10-30 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
+  },
+  {
+    "target": "三井物産",
+    "url": "https://finance.yahoo.com/quote/8031.T",
+    "changed_at": "2026-10-30T14:31:02.212177+00:00",
+    "action": "sell",
+    "price_label": "JPY 5006.0（2026-10-30 終値）",
+    "reasons": [
+      "高値圏で陰包陽（弱気の包み足）が出現"
+    ],
+    "stop_loss_label": null
+  },
+  {
+    "target": "ハイディーラオ",
+    "url": "https://finance.yahoo.com/quote/6862.HK",
+    "changed_at": "2026-10-30T14:31:02.696480+00:00",
+    "action": "buy",
+    "price_label": "HKD 9.4（2026-10-30 終値）",
+    "reasons": [
+      "安値圏で陽包陰（強気の包み足）が出現"
+    ],
+    "stop_loss_label": "HKD 9.0（2026-10-30 終値）"
   }
 ]
