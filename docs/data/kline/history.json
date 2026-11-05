@@ -295,5 +295,16 @@
       "安値圏で陽包陰（強気の包み足）が出現"
     ],
     "stop_loss_label": "HKD 9.0（2026-10-30 終値）"
+  },
+  {
+    "target": "三井物産",
+    "url": "https://finance.yahoo.com/quote/8031.T",
+    "changed_at": "2026-11-05T15:48:53.587785+00:00",
+    "action": "buy",
+    "price_label": "JPY 4900.0（2026-11-04 終値）",
+    "reasons": [
+      "安値圏で鎚子線が出現（下値支持が強い）"
+    ],
+    "stop_loss_label": "JPY 4680.0（2026-11-04 終値）"
   }
 ]
