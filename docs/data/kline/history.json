@@ -306,5 +306,27 @@
       "安値圏で鎚子線が出現（下値支持が強い）"
     ],
     "stop_loss_label": "JPY 4680.0（2026-11-04 終値）"
+  },
+  {
+    "target": "三菱商事",
+    "url": "https://finance.yahoo.com/quote/8058.T",
+    "changed_at": "2026-11-06T15:23:16.431540+00:00",
+    "action": "sell",
+    "price_label": "JPY 5274.0（2026-11-05 終値）",
+    "reasons": [
+      "高値圏で出来高を伴う滞涨（十字星または長い上影線）が出現"
+    ],
+    "stop_loss_label": null
+  },
+  {
+    "target": "三井物産",
+    "url": "https://finance.yahoo.com/quote/8031.T",
+    "changed_at": "2026-11-06T15:23:16.591573+00:00",
+    "action": "sell",
+    "price_label": "JPY 5039.0（2026-11-05 終値）",
+    "reasons": [
+      "高値圏で出来高を伴う滞涨（十字星または長い上影線）が出現"
+    ],
+    "stop_loss_label": null
   }
 ]
